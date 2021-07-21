@@ -1,12 +1,22 @@
 // source
+
+const settings = {
+  ABS: 0,
+  TractionControl: 0,
+  StabilityControl: 0,
+}
+
 function setABS(num) {
-  console.log(` ABS:${num}`)
+  settings.ABS = num
+  console.log(`ABS:${settings.ABS}`)
 }
 function setTraction(num) {
-  console.log(` Traction Control:${num}`)
+  settings.TractionControl = num
+  console.log(`Traction Control:${settings.TractionControl}`)
 }
 function setStability(num) {
-  console.log(` Stability Control:${num}`)
+  settings.StabilityControl = num
+  console.log(`Stability Control:${settings.StabilityControl}`)
 }
 
 function setAll(val) {
@@ -16,15 +26,18 @@ function setAll(val) {
 }
 
 function Beginner() {
-  console.log('Beginner:'), setAll(5)
+  console.log('**Beginner**')
+  setAll(5)
 }
 
 function GoodDriver() {
-  console.log('Good Driver:'), setAll(3)
+  console.log('**Good Driver**')
+  setAll(3)
 }
 
 function Maniac() {
-  console.log('Maniac:'), setAll(1)
+  console.log('**Maniac**')
+  setAll(1)
 }
 
 Beginner()
