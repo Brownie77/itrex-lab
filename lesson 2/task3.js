@@ -6,7 +6,7 @@ function doIteration(xerox, copies, documentsAvailable) {
       documentsAvailable += 2;
     }
   }
-  return [copies, documentsAvailable];
+  return [xerox, copies, documentsAvailable];
 }
 
 function startCopying(xerox, timeNeeded, copiesLeft, documentsAvailable) {
@@ -18,55 +18,78 @@ function startCopying(xerox, timeNeeded, copiesLeft, documentsAvailable) {
     }
   }
 
-  return [copiesLeft, documentsAvailable];
+  return [xerox, copiesLeft, documentsAvailable];
 }
 
 function shouldUseOnlyX(timeX, timeY, copiesLeft) {
-  if (timeX * copiesLeft < timeY) {
-    return true;
-  } else {
-    return false;
-  }
+  return timeX * copiesLeft < timeY;
 }
 
 function shouldUseOnlyY(timeX, timeY, copiesLeft) {
-  if (timeY * copiesLeft < timeX) {
-    return true;
-  } else {
-    return false;
-  }
+  return timeY * copiesLeft < timeX;
 }
 
-function copy(N, x, y) {
-  let copies = 0; // готовые копии
-  let copiesLeft = N; // осталось сделать копий
+function copy(amountOfCopies, timeForXeroxX, timeForXeroxY) {
+  let copies = 0; // already copied docs
+  let copiesLeft = amountOfCopies; // docs left to copy
   let documentsAvailable = 1;
 
-  const xeroxX = {
+  let xeroxX = {
     currentIter: 0,
   };
-  const xeroxY = {
+  let xeroxY = {
     currentIter: 0,
   };
 
   for (let tick = 1; ; tick++) {
-    if (shouldUseOnlyX(x, y, copiesLeft)) {
-      [copiesLeft, documentsAvailable] = startCopying(xeroxX, x, copiesLeft, documentsAvailable); // x
-    } else if (shouldUseOnlyY(x, y, copiesLeft)) {
-      [copiesLeft, documentsAvailable] = startCopying(xeroxY, y, copiesLeft, documentsAvailable); // y
+    if (shouldUseOnlyX(timeForXeroxX, timeForXeroxY, copiesLeft)) {
+      [xeroxX, copiesLeft, documentsAvailable] = startCopying(
+        { ...xeroxX },
+        timeForXeroxX,
+        copiesLeft,
+        documentsAvailable,
+      ); // Xerox X
+    } else if (shouldUseOnlyY(timeForXeroxX, timeForXeroxY, copiesLeft)) {
+      [xeroxY, copiesLeft, documentsAvailable] = startCopying(
+        { ...xeroxY },
+        timeForXeroxY,
+        copiesLeft,
+        documentsAvailable,
+      ); // Xerox Y
     } else {
-      if (x < y) {
-        [copiesLeft, documentsAvailable] = startCopying(xeroxX, x, copiesLeft, documentsAvailable); // x
-        [copiesLeft, documentsAvailable] = startCopying(xeroxY, y, copiesLeft, documentsAvailable); // y
+      if (timeForXeroxX < timeForXeroxY) {
+        [xeroxX, copiesLeft, documentsAvailable] = startCopying(
+          { ...xeroxX },
+          timeForXeroxX,
+          copiesLeft,
+          documentsAvailable,
+        ); // Xerox X
+        [xeroxY, copiesLeft, documentsAvailable] = startCopying(
+          { ...xeroxY },
+          timeForXeroxY,
+          copiesLeft,
+          documentsAvailable,
+        ); // Xerox Y
       } else {
-        [copiesLeft, documentsAvailable] = startCopying(xeroxY, y, copiesLeft, documentsAvailable); // y
-        [copiesLeft, documentsAvailable] = startCopying(xeroxX, x, copiesLeft, documentsAvailable); // x
+        [xeroxY, copiesLeft, documentsAvailable] = startCopying(
+          { ...xeroxY },
+          timeForXeroxY,
+          copiesLeft,
+          documentsAvailable,
+        ); // Xerox Y
+        [xeroxX, copiesLeft, documentsAvailable] = startCopying(
+          { ...xeroxX },
+          timeForXeroxX,
+          copiesLeft,
+          documentsAvailable,
+        ); // Xerox X
       }
     }
 
-    [copies, documentsAvailable] = doIteration(xeroxX, copies, documentsAvailable);
-    [copies, documentsAvailable] = doIteration(xeroxY, copies, documentsAvailable);
-    if (copies === N) {
+    [xeroxX, copies, documentsAvailable] = doIteration({ ...xeroxX }, copies, documentsAvailable);
+    [xeroxY, copies, documentsAvailable] = doIteration({ ...xeroxY }, copies, documentsAvailable);
+
+    if (copies === amountOfCopies) {
       return console.log('Result:', tick, 'seconds.');
     }
   }
@@ -74,3 +97,4 @@ function copy(N, x, y) {
 
 copy(4, 1, 1); // 3
 copy(5, 1, 2); // 4
+copy(5, 1, 26); // 5

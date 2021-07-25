@@ -1,4 +1,4 @@
-function generateVolumes(pages, k) {
+function generateVolumes(pages, partsToPublish) {
   function calculate(arr, depth, parts) {
     const currentIndex = parts.length - depth;
 
@@ -12,18 +12,19 @@ function generateVolumes(pages, k) {
     for (let i = 0; i < arr.length - depth + 1; ++i) {
       parts[currentIndex] = arr.slice(0, i + 1).reduce((total, val) => total + val, 0);
 
-      const next_biggest = calculate(arr.slice(i + 1), depth - 1, parts);
-      if (biggest == -1 || next_biggest < biggest) {
-        biggest = next_biggest;
+      const nextBiggest = calculate(arr.slice(i + 1), depth - 1, parts);
+      if (biggest == -1 || nextBiggest < biggest) {
+        biggest = nextBiggest;
       }
     }
     return biggest;
   }
 
-  return console.log('Result:', calculate(pages, k, Array(k).fill(0)));
+  return console.log('Result:', calculate(pages, partsToPublish, Array(partsToPublish).fill(0)));
 }
 
 generateVolumes([1, 2, 1], 2); // returns: 3
 generateVolumes([1, 2, 1, 1], 3); // returns: 2
 generateVolumes([6, 1, 1, 1], 2); // returns: 6
 generateVolumes([1, 3, 2, 1], 3); // returns: 3
+generateVolumes([1, 2, 1, 4, 2, 5], 3); // returns: 6

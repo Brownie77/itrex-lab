@@ -1,29 +1,23 @@
-function bulbs(N, P) {
-  if (N <= 0) {
-    throw new Error('N should be greater than 0.');
+function bulbs(bulbsAmount, inversions) {
+  if (bulbsAmount <= 0) {
+    throw new Error('The amount of bulbs should be greater than 0.');
   }
 
-  const arrayOfBulbs = new Array(N).fill(false);
+  const arrayOfBulbs = new Array(bulbsAmount).fill(false);
 
-  for (const inv of P) {
-    if (inv <= 0 || inv > N) {
-      throw new Error('All values in P should be greater than 0 and less than N.');
+  inversions.forEach((inv) => {
+    if (inv <= 0 || inv > bulbsAmount) {
+      throw new Error('All values in the inversions array should be greater than 0 and less than N.');
     }
 
-    for (let [idx, isBurning] of arrayOfBulbs.entries()) {
+    arrayOfBulbs.forEach((isBurning, idx, self) => {
       if ((idx + 1) % inv === 0) {
-        arrayOfBulbs[idx] = !isBurning;
+        self[idx] = !isBurning;
       }
-    }
-  }
-
-  let count = 0;
-  arrayOfBulbs.forEach((bulb) => {
-    if (bulb) {
-      ++count;
-    }
+    });
   });
-  return count;
+
+  return arrayOfBulbs.reduce((bulb, count) => count + bulb, 0);
 }
 
 console.log(bulbs(20, [2, 3, 8])); // returns 8

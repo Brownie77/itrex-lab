@@ -1,16 +1,16 @@
-function fillSquare(n, square) {
-  let i = Math.floor(n / 2);
-  let j = n - 1;
+function fillSquare(squareSize, square) {
+  let i = Math.floor(squareSize / 2);
+  let j = squareSize - 1;
 
-  for (let value = 1; value <= n ** 2; ) {
-    if (i === -1 && j === n) {
+  for (let value = 1; value <= squareSize ** 2; ) {
+    if (i === -1 && j === squareSize) {
       i = 0;
-      j = n - 2;
+      j = squareSize - 2;
     } else {
       if (i < 0) {
-        i = n - 1;
+        i = squareSize - 1;
       }
-      if (j === n) {
+      if (j === squareSize) {
         j = 0;
       }
     }
@@ -30,24 +30,24 @@ function fillSquare(n, square) {
   return square;
 }
 
-function genMagicSquare(n) {
-  if (n === 1) {
+function genMagicSquare(squareSize) {
+  if (squareSize === 1) {
     return [1];
-  } else if (n < 3) {
+  } else if (squareSize < 3) {
     return 'Impossible';
-  } else if (n % 2) {
-    const MagicSquare = Array(n)
+  } else if (squareSize % 2) {
+    const MagicSquare = Array(squareSize)
       .fill(0)
-      .map(() => Array(n).fill(0));
+      .map(() => Array(squareSize).fill(0));
 
-    return fillSquare(n, [...MagicSquare]);
+    return fillSquare(squareSize, [...MagicSquare]);
   } else {
     return 'This solution only works w/ odd numbers.';
   }
 }
 
-function logger(n) {
-  return console.log('For n =', n + ':', genMagicSquare(n));
+function logger(squareSize) {
+  return console.log('For squareSize =', squareSize + ':', genMagicSquare(squareSize));
 }
 
 logger(0); // Impossible

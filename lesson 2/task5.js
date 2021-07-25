@@ -1,12 +1,12 @@
-function findKayakAmount(N, D) {
+function findKayakAmount(peopleWeights, carryingCapacity) {
   const map = new Map();
 
-  for (const [firstIdx, personX] of N.entries()) {
+  for (const [firstIdx, personX] of peopleWeights.entries()) {
     map.set(firstIdx, personX);
-    for (const [secondIdx, personY] of N.entries()) {
+    for (const [secondIdx, personY] of peopleWeights.entries()) {
       if (personX !== personY) {
         const twoPersonsWeight = personX + personY;
-        if (twoPersonsWeight <= D && map.get(firstIdx) < twoPersonsWeight) {
+        if (twoPersonsWeight <= carryingCapacity && map.get(firstIdx) < twoPersonsWeight) {
           map.set(firstIdx, twoPersonsWeight);
           if (map.has(secondIdx)) {
             map.delete(secondIdx);
