@@ -1,24 +1,28 @@
 function doIteration(xerox, copies, documentsAvailable) {
+  let docsTotal = documentsAvailable,
+    copied = copies;
   if (xerox.currentIter > 0) {
     --xerox.currentIter;
     if (xerox.currentIter === 0) {
-      ++copies;
-      documentsAvailable += 2;
+      ++copied;
+      docsTotal += 2;
     }
   }
-  return [xerox, copies, documentsAvailable];
+  return [xerox, copied, docsTotal];
 }
 
 function startCopying(xerox, timeNeeded, copiesLeft, documentsAvailable) {
-  if (copiesLeft && documentsAvailable) {
+  let docsToCopy = copiesLeft,
+    docsTotal = documentsAvailable;
+  if (docsToCopy && docsTotal) {
     if (xerox.currentIter === 0) {
       xerox.currentIter = timeNeeded;
-      --copiesLeft;
-      --documentsAvailable;
+      --docsToCopy;
+      --docsTotal;
     }
   }
 
-  return [xerox, copiesLeft, documentsAvailable];
+  return [xerox, docsToCopy, docsTotal];
 }
 
 function shouldUseOnlyX(timeX, timeY, copiesLeft) {
