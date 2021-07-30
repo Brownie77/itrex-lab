@@ -1,17 +1,16 @@
-class Trasnform {
+class Transform {
   toRoman(num) {
+    const MAX_ROMAN_NUMBER = 3000000;
     if (num < 1) {
-      console.error("Error (fn convertToRoman(num)): Can't convert negetive numbers. You provided: " + num);
+      console.error("Error (fn toRoman(num)): Can't convert negetive numbers. You provided: " + num);
       return false;
     }
-    if (+num > 3000000) {
-      console.error("Error (fn convertToRoman(num)): Can't convert numbers greater than 3000000. You provided: " + num);
+    if (+num > MAX_ROMAN_NUMBER) {
+      console.error("Error (fn toRoman(num)): Can't convert numbers greater than 3000000. You provided: " + num);
       return false;
     }
     if (!+num) {
-      console.error(
-        "Error (fn convertToRoman(num)): 'num' must be a number or number in a string. You provided: " + num,
-      );
+      console.error("Error (fn toRoman(num)): 'num' must be a number or number in a string. You provided: " + num);
       return false;
     }
 
@@ -22,7 +21,7 @@ class Trasnform {
       else return a + c;
     }
 
-    let romanArray = ['I', 'V', 'X', 'L', 'C', 'D', 'M', 'Vb', 'Xb', 'Lb', 'Cb', 'Db', 'Mb']; // Xb means Xbar
+    let romanArray = ['I', 'V', 'X', 'L', 'C', 'D', 'M', 'Vb', 'Xb', 'Lb', 'Cb', 'Db', 'Mb'];
 
     let arr = String(+num)
       .split('')
@@ -66,7 +65,7 @@ class Trasnform {
   }
 }
 
-class Mul extends Trasnform {
+class Mul extends Transform {
   constructor(sys) {
     super();
     this._system = sys.toUpperCase();
@@ -84,7 +83,7 @@ class Mul extends Trasnform {
   }
 }
 
-class Sum extends Trasnform {
+class Sum extends Transform {
   constructor(sys) {
     super();
     this._system = sys.toUpperCase();
@@ -102,7 +101,7 @@ class Sum extends Trasnform {
   }
 }
 
-class Div extends Trasnform {
+class Div extends Transform {
   constructor(sys) {
     super();
     this._system = sys.toUpperCase();
