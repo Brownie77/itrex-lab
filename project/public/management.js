@@ -18,12 +18,13 @@ $('#next-patient').click(() => {
 $('#resolution-add-btn').click(() => {
   const str = $('#resolution-text').val();
   $('#resolution-text').val('');
-  let arr = str.split(':');
-  arr[0] = arr[0].toUpperCase();
+  let name = $('#placeholder').text();
+  name = name.toUpperCase();
+  console.log(name, str);
   if (localStorage.getItem('resolutions')) {
     const resolutions = new Map(JSON.parse(localStorage.getItem('resolutions')));
-    if (arr[1] && resolutions.has(arr[0])) {
-      resolutions.set(arr[0], arr[1]);
+    if (str.length && resolutions.has(name)) {
+      resolutions.set(name, str);
     }
     localStorage.setItem('resolutions', JSON.stringify(Array.from(resolutions.entries())));
   } else {
