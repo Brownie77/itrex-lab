@@ -8,6 +8,7 @@
 body {
   font-family: 'Exo', sans-serif;
   font-size: 20px;
+  overflow-y: hidden;
 }
 
 .context {
@@ -150,4 +151,19 @@ body {
 .btn:focus {
   border: none !important;
   box-shadow: none !important;
+  outline: none !important;
+  height: 38px !important;
+}
+
+.btn:active {
+  opacity: 0.2;
+}
+
+.btn-wide {
+  width: 100%;
+  border-radius: 0;
+}
+
+.navb {
+  padding: 0;
 }
