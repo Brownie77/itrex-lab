@@ -1,0 +1,32 @@
+#display-queue > * {
+  margin: 2rem 0;
+}
+
+#add-to-queue-form {
+  display: flex;
+  width: 50%;
+  margin-left: 50%;
+  margin-top: 15%;
+}
+
+#add-to-queue-btn {
+  margin-left: 0.3rem;
+}
+
+#resolution-search-form {
+  display: flex;
+}
+
+#search {
+  margin-left: 0.3rem;
+  background-color: rgba(25, 135, 84, 1);
+  color: white;
+}
+
+#search:hover {
+  background-color: rgba(25, 135, 84, 0.6);
+}
+
+#resolution-found {
+  resize: none;
+}
