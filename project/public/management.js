@@ -86,14 +86,6 @@ function deleteResolution() {
   }
 }
 
-$('#resolution-text').keydown((event) => {
-  const { keyCode } = event;
-  if (keyCode === 13) {
-    event.preventDefault();
-    $('#resolution-add-btn').trigger('click');
-  }
-});
-
 $('#name').keydown((event) => {
   const { keyCode } = event;
   if (keyCode === 13) {
