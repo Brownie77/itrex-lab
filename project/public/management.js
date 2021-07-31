@@ -9,7 +9,7 @@ $('#next-patient').click(() => {
     if (queue[0]) {
       $('#placeholder').contents()[0].data = queue[0];
     } else {
-      $('#placeholder').contents()[0].data = '<Stack item value>';
+      $('#placeholder').contents()[0].data = '<empty>';
     }
     localStorage.setItem('queue', JSON.stringify(queue));
   }
@@ -20,15 +20,12 @@ $('#resolution-add-btn').click(() => {
   $('#resolution-text').val('');
   let name = $('#placeholder').text();
   name = name.toUpperCase();
-  console.log(name, str);
   if (localStorage.getItem('resolutions')) {
     const resolutions = new Map(JSON.parse(localStorage.getItem('resolutions')));
     if (str.length && resolutions.has(name)) {
       resolutions.set(name, str);
     }
     localStorage.setItem('resolutions', JSON.stringify(Array.from(resolutions.entries())));
-  } else {
-    localStorage.setItem('resolutions', JSON.stringify([]));
   }
 });
 
@@ -37,8 +34,8 @@ $('#search-resolution-btn').click(() => {
   name = name.toUpperCase();
   currentName = name;
   if (name) {
+    const $display = $('#resolution-found');
     if (localStorage.getItem('resolutions')) {
-      const $display = $('#resolution-found');
       const resolutions = new Map(JSON.parse(localStorage.getItem('resolutions')));
       if (resolutions.has(name)) {
         const userResolution = resolutions.get(name);
@@ -50,6 +47,8 @@ $('#search-resolution-btn').click(() => {
       } else {
         $display.val('No such user');
       }
+    } else {
+      $display.val('No such user');
     }
   }
 });
@@ -64,5 +63,21 @@ $('#resolution-delete-btn').click(() => {
       $('#resolution-found').val('');
       $('#name').val('');
     }
+  }
+});
+
+$('#resolution-text').keydown((event) => {
+  const { keyCode } = event;
+  if (keyCode === 13) {
+    event.preventDefault();
+    $('#resolution-add-btn').trigger('click');
+  }
+});
+
+$('#name').keydown((event) => {
+  const { keyCode } = event;
+  if (keyCode === 13) {
+    event.preventDefault();
+    $('#search-resolution-btn').trigger('click');
   }
 });

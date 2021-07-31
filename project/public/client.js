@@ -22,13 +22,28 @@ $('#add-to-queue-btn').click(() => {
   }
 });
 
+$('#name').keydown((event) => {
+  const { keyCode } = event;
+  if (keyCode === 13) {
+    $('#add-to-queue-btn').trigger('click');
+  }
+});
+
+$('#search-name').keydown((event) => {
+  const { keyCode } = event;
+  if (keyCode === 13) {
+    event.preventDefault();
+    $('#search').trigger('click');
+  }
+});
+
 $('#search').click(() => {
   let name = $('#search-name').val();
+  const $display = $('#resolution-found');
   name = name.toUpperCase();
   $('#search-name').val('');
   if (name) {
     if (localStorage.getItem('resolutions')) {
-      const $display = $('#resolution-found');
       const resolutions = new Map(JSON.parse(localStorage.getItem('resolutions')));
       if (resolutions.has(name)) {
         const userResolution = resolutions.get(name);
@@ -40,6 +55,8 @@ $('#search').click(() => {
       } else {
         $display.val('No such user');
       }
+    } else {
+      $display.val('No such user');
     }
   }
 });
