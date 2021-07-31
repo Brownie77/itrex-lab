@@ -16,16 +16,16 @@
   display: flex;
 }
 
-#search {
+#search-resolution-client {
   margin-left: 0.3rem;
   background-color: rgba(25, 135, 84, 1);
   color: white;
 }
 
-#search:hover {
+#search-resolution-client:hover {
   background-color: rgba(25, 135, 84, 0.6);
 }
 
-#resolution-found {
+#client-resolution-found {
   resize: none;
 }

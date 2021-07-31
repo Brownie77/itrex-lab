@@ -25,6 +25,11 @@
   resize: none;
 }
 
+#resolution > textarea:focus,
+#resolution-search > textarea:focus {
+  box-shadow: none !important;
+}
+
 #resolution > button,
 #resolution-search > button {
   float: right;
@@ -37,7 +42,7 @@
   margin-top: 3rem;
 }
 
-#search-resolution-btn {
+#search-resolution-doctor {
   background-color: rgba(25, 135, 84, 1);
   color: white;
   margin-bottom: 0.3rem;
@@ -45,6 +50,6 @@
   border-radius: 8px;
 }
 
-#search-resolution-btn:hover {
+#search-resolution-doctor:hover {
   background-color: rgba(25, 135, 84, 0.6);
 }
