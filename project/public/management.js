@@ -1,10 +1,28 @@
 let currentName = '';
 
-$('#next-patient').click(() => {
+$(document).ready(() => {
+  $('#resolution-delete-btn').attr('disabled', true);
+});
+
+$('.context').click((event) => {
+  const { id } = event.target;
+  switch (id) {
+    case 'next-patient':
+      return nextPatient();
+    case 'resolution-add-btn':
+      return addResolution();
+    case 'search-resolution-btn':
+      return searchResolution();
+    case 'resolution-delete-btn':
+      return deleteResolution();
+  }
+});
+
+function nextPatient() {
   let name = $('#placeholder').text();
   name = name.toUpperCase();
   const queue = JSON.parse(localStorage.getItem('queue'));
-  if (queue[0] === name) {
+  if (queue && queue[0] === name) {
     queue.shift();
     if (queue[0]) {
       $('#placeholder').contents()[0].data = queue[0];
@@ -13,9 +31,9 @@ $('#next-patient').click(() => {
     }
     localStorage.setItem('queue', JSON.stringify(queue));
   }
-});
+}
 
-$('#resolution-add-btn').click(() => {
+function addResolution() {
   const str = $('#resolution-text').val();
   $('#resolution-text').val('');
   let name = $('#placeholder').text();
@@ -27,9 +45,9 @@ $('#resolution-add-btn').click(() => {
     }
     localStorage.setItem('resolutions', JSON.stringify(Array.from(resolutions.entries())));
   }
-});
+}
 
-$('#search-resolution-btn').click(() => {
+function searchResolution() {
   let name = $('#name').val();
   name = name.toUpperCase();
   currentName = name;
@@ -46,15 +64,15 @@ $('#search-resolution-btn').click(() => {
           $display.val('Empty resolution');
         }
       } else {
-        $display.val('No such user');
+        $display.val('No such patient');
       }
     } else {
-      $display.val('No such user');
+      $display.val('No such patient');
     }
   }
-});
+}
 
-$('#resolution-delete-btn').click(() => {
+function deleteResolution() {
   if (currentName) {
     if (localStorage.getItem('resolutions')) {
       const resolutions = new Map(JSON.parse(localStorage.getItem('resolutions')));
@@ -66,7 +84,7 @@ $('#resolution-delete-btn').click(() => {
       $('#name').val('');
     }
   }
-});
+}
 
 $('#resolution-text').keydown((event) => {
   const { keyCode } = event;
@@ -82,8 +100,4 @@ $('#name').keydown((event) => {
     event.preventDefault();
     $('#search-resolution-btn').trigger('click');
   }
-});
-
-$(document).ready(() => {
-  $('#resolution-delete-btn').attr('disabled', true);
 });

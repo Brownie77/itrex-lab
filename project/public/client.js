@@ -1,4 +1,14 @@
-$('#add-to-queue-btn').click(() => {
+$('.context').click((event) => {
+  const { id } = event.target;
+  switch (id) {
+    case 'add-to-queue-btn':
+      return addToQueue();
+    case 'search':
+      return searchResolution();
+  }
+});
+
+function addToQueue() {
   let name = $('#name').val();
   name = name.toUpperCase();
   $('#name').val('');
@@ -20,24 +30,9 @@ $('#add-to-queue-btn').click(() => {
       localStorage.setItem('resolutions', JSON.stringify(Array.from(resolutions.entries())));
     }
   }
-});
+}
 
-$('#name').keydown((event) => {
-  const { keyCode } = event;
-  if (keyCode === 13) {
-    $('#add-to-queue-btn').trigger('click');
-  }
-});
-
-$('#search-name').keydown((event) => {
-  const { keyCode } = event;
-  if (keyCode === 13) {
-    event.preventDefault();
-    $('#search').trigger('click');
-  }
-});
-
-$('#search').click(() => {
+function searchResolution() {
   let name = $('#search-name').val();
   const $display = $('#resolution-found');
   name = name.toUpperCase();
@@ -53,10 +48,25 @@ $('#search').click(() => {
           $display.val('Empty resolution');
         }
       } else {
-        $display.val('No such user');
+        $display.val('No such patient');
       }
     } else {
-      $display.val('No such user');
+      $display.val('No such patient');
     }
+  }
+}
+
+$('#name').keydown((event) => {
+  const { keyCode } = event;
+  if (keyCode === 13) {
+    $('#add-to-queue-btn').trigger('click');
+  }
+});
+
+$('#search-name').keydown((event) => {
+  const { keyCode } = event;
+  if (keyCode === 13) {
+    event.preventDefault();
+    $('#search').trigger('click');
   }
 });
