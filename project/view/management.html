@@ -47,7 +47,7 @@
         <div class="col">
           <div class="form-group" id="resolution">
             <textarea class="form-control"  id="resolution-text" rows="5" 
-              placeholder="Input to set a resolution by key pattern: &#34;patient:&lt;queue_current_patient_value&gt;&#34;"></textarea>
+              placeholder="Input the resolution for the current patient"></textarea>
             <button type="button" class="btn btn-primary" id="resolution-add-btn">Add</button>
           </div>
         </div>
@@ -59,13 +59,13 @@
         <div class="col">
           <div class="form-group" id="search-resolution-form">
             <button type="button" class="btn btn-outline-success" id="search-resolution-btn">Show resolution</button>
-            <input type="text" class="form-control" id="name" placeholder="Input: key of the patient">
+            <input type="text" class="form-control" id="name" placeholder="Search for a resolution by name">
           </div>
         </div>
         <div class="col">
           <div class="form-group" id="resolution-search">
-            <textarea class="form-control" disabled id="resolution-found" rows="8" placeholder="Found resolution"></textarea>
-            <button type="button" class="btn btn-danger" id="resolution-delete-btn">Delete</button>
+            <textarea class="form-control" disabled id="resolution-found" rows="8" placeholder="If found, the resolution will be displayed here"></textarea>
+            <button type="button" class="btn btn-danger" id="resolution-delete-btn" disabled="false">Delete resolution</button>
           </div>
         </div>
       </div>

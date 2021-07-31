@@ -41,6 +41,7 @@ $('#search-resolution-btn').click(() => {
         const userResolution = resolutions.get(name);
         if (userResolution) {
           $display.val(userResolution);
+          $('#resolution-delete-btn').attr('disabled', false);
         } else {
           $display.val('Empty resolution');
         }
@@ -60,6 +61,7 @@ $('#resolution-delete-btn').click(() => {
       resolutions.set(currentName, null);
       localStorage.setItem('resolutions', JSON.stringify(Array.from(resolutions.entries())));
       currentName = '';
+      $('#resolution-delete-btn').attr('disabled', true);
       $('#resolution-found').val('');
       $('#name').val('');
     }
@@ -80,4 +82,8 @@ $('#name').keydown((event) => {
     event.preventDefault();
     $('#search-resolution-btn').trigger('click');
   }
+});
+
+$(document).ready(() => {
+  $('#resolution-delete-btn').attr('disabled', true);
 });
