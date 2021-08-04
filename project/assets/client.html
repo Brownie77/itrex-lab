@@ -32,9 +32,16 @@
           <span>Current patient:</span>
           <h1 id="placeholder">&lt;empty&gt;</h1>
         </div>
-        <div class="col">
+        <div class="col" id = "client-enqueue">
           <div class="form-group" id="add-to-queue-form">
-            <input type="text" class="form-control" placeholder="Make an appointment" id="name"/>
+            <input type="text" class="form-control" placeholder="Name" id="name"/>
+            <input type="text" class="form-control" placeholder="Set TTL (minutes)" id="set-ttl"/>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="use-default-TTL-check">
+              <label class="form-check-label" for="flexCheckDefault">
+                No TTL (Keep forever)
+              </label>
+            </div>
             <button type="button" class="btn btn-primary" id="add-to-queue-btn">Add</button>
           </div>
         </div>

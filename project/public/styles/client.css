@@ -2,14 +2,36 @@
   margin: 2rem 0;
 }
 
-#add-to-queue-form {
+#client-enqueue {
   display: flex;
-  margin-left: 50%;
-  margin-top: 15%;
+  justify-content: center;
+  align-items: center;
+}
+
+#add-to-queue-form {
+  display: inline-block;
+}
+
+#set-ttl {
+  margin-top: 1rem;
+  display: block;
+}
+
+.form-check-label {
+  font-size: 15px;
+}
+
+.form-check {
+  margin-top: 1rem;
+}
+
+#use-default-TTL-check:focus {
+  box-shadow: none !important;
 }
 
 #add-to-queue-btn {
-  margin-left: 0.3rem;
+  float: right;
+  margin-top: 1rem;
 }
 
 #resolution-search-form {

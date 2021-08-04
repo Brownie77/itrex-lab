@@ -7,10 +7,19 @@ export default class QueueModel {
   enqueue(person) {
     if (!this.queue.includes(person)) {
       this.queue.push(person);
+
       this.#saveQueue();
     } else {
       throw new Error('Cannot add this person to the queue, theyre already there.');
     }
+  }
+
+  deleteByName(person) {
+    const idx = this.queue.indexOf(person);
+    if (idx > -1) {
+      this.queue.splice(idx, 1);
+    }
+    this.#saveQueue();
   }
 
   getFirst() {
