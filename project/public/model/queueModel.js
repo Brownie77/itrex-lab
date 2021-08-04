@@ -1,7 +1,7 @@
 export default class QueueModel {
   constructor() {
-    this.queue = this.#syncQueueWithLocalStorage() || [];
     this.storageName = 'queue';
+    this.queue = this.#syncQueueWithLocalStorage() || [];
   }
 
   enqueue(person) {

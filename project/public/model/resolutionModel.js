@@ -1,7 +1,7 @@
 export default class ResolutionModel {
   constructor() {
-    this.resolutionMap = this.#syncResolutionMapWithLocalStorage() || new Map();
     this.storageName = 'resolutions';
+    this.resolutionMap = this.#syncResolutionMapWithLocalStorage() || new Map();
   }
 
   getByName(name) {
