@@ -1,17 +1,17 @@
-const express = require('express');
-const path = require('path');
-const morgan = require('morgan');
+import express from 'express';
+import path from 'path';
+import morgan from 'morgan';
 
-const queueRoutes = require('./routes/client');
-const doctorRoutes = require('./routes/doctor');
+import queueRoutes from './routes/client.js';
+import doctorRoutes from './routes/doctor.js';
 
-const err404Handle = require('./middleware/notFound');
+import err404Handle from './middleware/notFound.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.use(morgan('tiny'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(path.resolve(), 'public')));
 
 app.use('/queue', queueRoutes);
 app.use('/doctor', doctorRoutes);

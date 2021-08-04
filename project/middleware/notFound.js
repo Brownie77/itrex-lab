@@ -1,5 +1,5 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = function (req, res, next) {
-  res.status(404).sendFile(path.join(__dirname, '../assets/404.html'));
-};
+export default function (req, res, next) {
+  res.status(404).sendFile(path.join(path.resolve(), './assets/404.html'));
+}

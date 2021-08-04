@@ -8,7 +8,6 @@ export default class OptionsController {
 
   handleDrop() {
     this.model.deleteAll();
-    this.view.setEmptyValue();
-    location.reload();
+    this.view.setEmptyValue().reload();
   }
 }

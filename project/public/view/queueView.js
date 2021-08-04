@@ -8,14 +8,14 @@ export default class QueueView {
     return this.queueDisplay.text().toUpperCase();
   }
 
-  getNameFromInput() {
+  getNameFromInputAndClearInput() {
     const name = this.queueInput.val();
     this.queueInput.val('');
     return name.toUpperCase();
   }
 
   setCurrentlyDisplayedPatient(name) {
-    const value = name ? name : '<empty>';
+    const value = name || '<empty>';
     this.queueDisplay.contents()[0].data = value;
   }
 }

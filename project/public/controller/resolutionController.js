@@ -2,7 +2,10 @@ export default class ResolutionController {
   constructor(resolutionView, resolutionModel) {
     this.view = resolutionView;
     this.model = resolutionModel;
-    this.patientsNameWhoseResolutionWasFound = null;
+    this.selectedPatient = null;
+
+    this.EmptyResolutionMsg = '<empty>';
+    this.NoPatientFoundMsg = '<no such patient>';
 
     $('#add-to-queue-btn').click(this.handleNewPatient.bind(this));
     $('#resolution-add-btn').click(this.handleAddResolution.bind(this));
@@ -13,40 +16,42 @@ export default class ResolutionController {
 
   handleNewPatient() {
     const patient = this.view.getNameFromInput();
-    this.model.addToResolutionMap(patient);
+    this.model.add(patient);
   }
 
   handleAddResolution() {
-    const resolution = this.view.getCurrentAppointmentResolution();
+    const resolution = this.view.getCurrentAppointmentResolutionAndClearInput();
     const patient = this.view.getCurrentPatientName();
-    this.model.setResolution(patient, resolution);
+    this.model.setByName(patient, resolution);
   }
 
   handleSearchClient() {
-    const searchText = this.view.getClientSearchInput();
-    let textToDisplay = 'No such user';
-    if (this.model.isIn(searchText)) {
-      const resolution = this.model.getResolutionByName(searchText);
-      textToDisplay = resolution ? resolution : 'Empty';
+    const searchName = this.view.getClientSearchInput();
+    let textToDisplay = this.NoPatientFoundMsg;
+    if (this.model.isIn(searchName)) {
+      const resolution = this.model.getByName(searchName);
+      textToDisplay = resolution || this.EmptyResolutionMsg;
     }
-    this.view.displayResolutionClient(textToDisplay);
+    this.view.displayResolutionClientAndClearSearchInput(textToDisplay);
   }
 
   handleSearchDoctor() {
-    const searchText = this.view.getDoctorSearchInput();
-    let textToDisplay = 'No such user';
-    if (this.model.isIn(searchText)) {
-      const resolution = this.model.getResolutionByName(searchText);
-      textToDisplay = resolution ? resolution : 'Empty';
-      this.patientsNameWhoseResolutionWasFound = searchText;
+    const searchName = this.view.getDoctorSearchInput();
+    let textToDisplay = this.NoPatientFoundMsg;
+    const exists = this.model.isIn(searchName);
+    if (exists) {
+      const resolution = this.model.getByName(searchName);
+      textToDisplay = resolution || this.EmptyResolutionMsg;
+      this.selectedPatient = searchName;
+      if (resolution) {
+        this.view.setDeleteButtonState(false);
+      }
     }
-    this.view.displayResolutionDoctor(textToDisplay);
-    this.view.setDeleteButtonState(false);
+    this.view.displayResolutionDoctorAndClearSearchInput(textToDisplay);
   }
 
   handleDeleteResolution() {
-    this.model.deleteResolution(this.patientsNameWhoseResolutionWasFound);
-    this.view.clearResolutionOutputs();
-    this.view.setDeleteButtonState(true);
+    this.model.delete(this.selectedPatient);
+    this.view.clearResolutionOutputs().setDeleteButtonState(true);
   }
 }

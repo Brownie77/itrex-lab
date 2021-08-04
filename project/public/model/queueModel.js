@@ -1,32 +1,33 @@
 export default class QueueModel {
   constructor() {
-    this.queue = this.#getQueue() || [];
+    this.queue = this.#syncQueueWithLocalStorage() || [];
+    this.storageName = 'queue';
   }
 
-  addToQueue(person) {
+  enqueue(person) {
     if (!this.queue.includes(person)) {
       this.queue.push(person);
       this.#saveQueue();
     }
   }
 
-  getFirstFromQueue() {
+  getFirst() {
     return this.queue[0] ? this.queue[0] : null;
   }
 
-  deleteFirstFromQueue(name) {
-    if (name === this.queue[0]) {
+  dequeue() {
+    if (this.queue.length) {
       this.queue.shift();
       this.#saveQueue();
     }
   }
 
   #saveQueue() {
-    localStorage.setItem('queue', JSON.stringify(this.queue));
+    localStorage.setItem(this.storageName, JSON.stringify(this.queue));
   }
 
-  #getQueue() {
-    const arrayStr = localStorage.getItem('queue');
+  #syncQueueWithLocalStorage() {
+    const arrayStr = localStorage.getItem(this.storageName);
     return arrayStr ? JSON.parse(arrayStr) : null;
   }
 }

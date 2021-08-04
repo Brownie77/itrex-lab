@@ -10,9 +10,16 @@ export default class ResolutionView {
     this.deleteResolutionBtn = $('#resolution-delete-btn');
   }
 
-  displayResolutionDoctor(resolution) {
+  displayResolutionDoctorAndClearSearchInput(resolution) {
     this.resolutionSearchInputDoctor.val('');
     this.resolutionOutputDoctor.val(resolution);
+    return this;
+  }
+
+  displayResolutionClientAndClearSearchInput(resolution) {
+    this.resolutionSearchInputClient.val('');
+    this.resolutionOutputClient.val(resolution);
+    return this;
   }
 
   getClientSearchInput() {
@@ -23,12 +30,7 @@ export default class ResolutionView {
     return this.resolutionSearchInputDoctor.val().toUpperCase();
   }
 
-  displayResolutionClient(resolution) {
-    this.resolutionSearchInputClient.val('');
-    this.resolutionOutputClient.val(resolution);
-  }
-
-  getCurrentAppointmentResolution() {
+  getCurrentAppointmentResolutionAndClearInput() {
     const resolution = this.addResolutionInput.val();
     this.addResolutionInput.val('');
     return resolution;
@@ -45,10 +47,12 @@ export default class ResolutionView {
 
   setDeleteButtonState(state) {
     this.deleteResolutionBtn.attr('disabled', state);
+    return this;
   }
 
   clearResolutionOutputs() {
     this.resolutionOutputDoctor.val('');
     this.resolutionOutputClient.val('');
+    return this;
   }
 }

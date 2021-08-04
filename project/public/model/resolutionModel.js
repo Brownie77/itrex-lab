@@ -1,18 +1,19 @@
 export default class ResolutionModel {
   constructor() {
-    this.resolutionMap = this.#getResolutionMap() || new Map();
+    this.resolutionMap = this.#syncResolutionMapWithLocalStorage() || new Map();
+    this.storageName = 'resolutions';
   }
 
-  getResolutionByName(name) {
+  getByName(name) {
     return this.resolutionMap.get(name);
   }
 
-  addToResolutionMap(person) {
+  add(person) {
     this.resolutionMap.set(person, null);
     this.#saveResolutionMap();
   }
 
-  setResolution(person, resolution) {
+  setByName(person, resolution) {
     if (this.isIn(person)) {
       this.resolutionMap.set(person, resolution);
       this.#saveResolutionMap();
@@ -23,7 +24,7 @@ export default class ResolutionModel {
     return this.resolutionMap.has(name);
   }
 
-  deleteResolution(name) {
+  delete(name) {
     if (this.isIn(name)) {
       this.resolutionMap.set(name, null);
       this.#saveResolutionMap();
@@ -31,11 +32,14 @@ export default class ResolutionModel {
   }
 
   #saveResolutionMap() {
-    localStorage.setItem('resolutions', JSON.stringify(Array.from(this.resolutionMap.entries())));
+    localStorage.setItem(
+      this.storageName,
+      JSON.stringify(Array.from(this.resolutionMap.entries())),
+    );
   }
 
-  #getResolutionMap() {
-    const resolutions = localStorage.getItem('resolutions');
+  #syncResolutionMapWithLocalStorage() {
+    const resolutions = localStorage.getItem(this.storageName);
     return resolutions ? new Map(JSON.parse(resolutions)) : null;
   }
 }

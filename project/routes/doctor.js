@@ -1,9 +1,10 @@
-const { Router } = require('express');
-const path = require('path');
+import { Router } from 'express';
+import path from 'path';
+
 const router = Router();
 
 router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../assets/management.html'));
+  res.sendFile(path.join(path.resolve(), './assets/management.html'));
 });
 
-module.exports = router;
+export default router;

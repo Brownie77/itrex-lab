@@ -9,23 +9,22 @@ export default class QueueController {
   }
 
   handleLoad() {
-    const currentPatient = this.model.getFirstFromQueue();
+    const currentPatient = this.model.getFirst();
     if (currentPatient) {
       this.view.setCurrentlyDisplayedPatient(currentPatient);
     }
   }
 
   handleProcessCurrentPatient() {
-    const currentPatient = this.view.getCurrentlyDisplayedPatient();
-    this.model.deleteFirstFromQueue(currentPatient);
-    const newPatient = this.model.getFirstFromQueue();
+    this.model.dequeue();
+    const newPatient = this.model.getFirst();
     this.view.setCurrentlyDisplayedPatient(newPatient);
   }
 
   handleAddToQueue() {
-    const newPatient = this.view.getNameFromInput();
-    this.model.addToQueue(newPatient);
-    const currentPatient = this.model.getFirstFromQueue();
+    const newPatient = this.view.getNameFromInputAndClearInput();
+    this.model.enqueue(newPatient);
+    const currentPatient = this.model.getFirst();
     this.view.setCurrentlyDisplayedPatient(currentPatient);
   }
 }
