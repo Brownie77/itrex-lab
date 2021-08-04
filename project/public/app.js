@@ -10,8 +10,12 @@ import OptionsModel from './model/optionsModel.js';
 
 export default class App {
   constructor() {
-    this.resolution = new ResolutionController(new ResolutionView(), new ResolutionModel());
-    this.queue = new QueueController(new QueueView(), new QueueModel());
-    this.options = new OptionsController(new OptionsView(), new OptionsModel());
+    try {
+      this.resolution = new ResolutionController(new ResolutionView(), new ResolutionModel());
+      this.queue = new QueueController(new QueueView(), new QueueModel());
+      this.options = new OptionsController(new OptionsView(), new OptionsModel());
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 }

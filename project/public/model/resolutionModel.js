@@ -28,6 +28,8 @@ export default class ResolutionModel {
     if (this.isIn(name)) {
       this.resolutionMap.set(name, null);
       this.#saveResolutionMap();
+    } else {
+      throw new Error('Cannot delete patients resolution that doesnt exist.');
     }
   }
 

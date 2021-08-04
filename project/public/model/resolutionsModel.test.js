@@ -27,7 +27,7 @@ describe('test ResolutionModel', () => {
   test('should set and return a resolution by persons name', () => {
     const spyGetByName = jest.spyOn(model, 'getByName');
     const spySetByName = jest.spyOn(model, 'setByName');
-    const person2 = 'Someone Else';
+    const person2 = 'Someone';
 
     model.add(person2);
     model.add(person);
@@ -42,6 +42,7 @@ describe('test ResolutionModel', () => {
 
   test('should delete a resolution by persons name', () => {
     const spyDelete = jest.spyOn(model, 'delete');
+    const person2 = 'Someone';
 
     model.add(person);
     model.setByName(person, resolution);
@@ -53,6 +54,12 @@ describe('test ResolutionModel', () => {
     expect(model.getByName(person)).not.toBe(resolution);
     expect(model.getByName(person)).toBeNull();
     expect(spyDelete).toHaveBeenLastCalledWith(person);
+
+    try {
+      model.delete(person2);
+    } catch (e) {
+      expect(e.message).toBe('Cannot delete patients resolution that doesnt exist.');
+    }
   });
 
   test('should tell if the person is in the list', () => {

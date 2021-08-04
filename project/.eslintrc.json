@@ -17,6 +17,7 @@
     },
     "rules": {
         "no-unused-vars": "warn",
+        "no-console":"warn",
         "class-methods-use-this": "off",
         "import/extensions": "off",
         "no-underscore-dangle": "off"

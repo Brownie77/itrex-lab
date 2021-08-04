@@ -8,6 +8,8 @@ export default class QueueModel {
     if (!this.queue.includes(person)) {
       this.queue.push(person);
       this.#saveQueue();
+    } else {
+      throw new Error('Cannot add this person to the queue, theyre already there.');
     }
   }
 
@@ -19,6 +21,8 @@ export default class QueueModel {
     if (this.queue.length) {
       this.queue.shift();
       this.#saveQueue();
+    } else {
+      throw new Error('Cannot delete the first patient from an empty queue.');
     }
   }
 
