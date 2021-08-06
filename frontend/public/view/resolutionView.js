@@ -1,65 +1,72 @@
 export default class ResolutionView {
   constructor() {
-    this.resolutionSearchInputDoctor = $('#doctor-search');
-    this.resolutionSearchInputClient = $('#client-search');
-    this.currentPatient = $('#placeholder');
-    this.queueInput = $('#name');
-    this.addResolutionInput = $('#resolution-text');
-    this.resolutionTTL = $('#resolution-ttl');
-    this.resolutionOutputDoctor = $('#doctor-resolution-found');
-    this.resolutionOutputClient = $('#client-resolution-found');
-    this.deleteResolutionBtn = $('#resolution-delete-btn');
+    this.resolutionSearchInputDoctor = document.getElementById('doctor-search');
+    this.resolutionSearchInputClient = document.getElementById('client-search');
+    this.currentPatient = document.getElementById('placeholder');
+    this.queueInput = document.getElementById('name');
+    this.addResolutionInput = document.getElementById('resolution-text');
+    this.resolutionTTL = document.getElementById('resolution-ttl');
+    this.resolutionOutputDoctor = document.getElementById('doctor-resolution-found');
+    this.resolutionOutputClient = document.getElementById('client-resolution-found');
+    this.deleteResolutionBtn = document.getElementById('resolution-delete-btn');
   }
 
   displayResolutionDoctorAndClearSearchInput(resolution) {
-    this.resolutionSearchInputDoctor.val('');
-    this.resolutionOutputDoctor.val(resolution);
+    this.resolutionSearchInputDoctor.value = '';
+    this.resolutionOutputDoctor.value = resolution;
     return this;
   }
 
   displayResolutionClientAndClearSearchInput(resolution) {
-    this.resolutionSearchInputClient.val('');
-    this.resolutionOutputClient.val(resolution);
+    this.resolutionSearchInputClient.value = '';
+    this.resolutionOutputClient.value = resolution;
     return this;
   }
 
   getClientSearchInput() {
-    return this.resolutionSearchInputClient.val().toUpperCase();
+    return this.resolutionSearchInputClient.value.toUpperCase();
   }
 
   getDoctorSearchInput() {
-    return this.resolutionSearchInputDoctor.val().toUpperCase();
+    return this.resolutionSearchInputDoctor.value.toUpperCase();
   }
 
   getTTLAndClearInput() {
-    const ttl = this.resolutionTTL.val();
-    this.resolutionTTL.val('');
+    const ttl = this.resolutionTTL.value;
+    this.resolutionTTL.value = '';
     return ttl;
   }
 
   getCurrentAppointmentResolutionAndClearInput() {
-    const resolution = this.addResolutionInput.val();
-    this.addResolutionInput.val('');
+    const resolution = this.addResolutionInput.value;
+    this.addResolutionInput.value = '';
     return resolution;
   }
 
   getCurrentPatientName() {
-    return this.currentPatient.text().toUpperCase();
+    return this.currentPatient.textContent.toUpperCase();
   }
 
   getNameFromInput() {
-    const name = this.queueInput.val();
+    const name = this.queueInput.value;
     return name.toUpperCase();
   }
 
-  setDeleteButtonState(state) {
-    this.deleteResolutionBtn.attr('disabled', state);
+  setDeleteButtonState(enabled) {
+    if (enabled) {
+      this.deleteResolutionBtn.disabled = false;
+    } else {
+      this.deleteResolutionBtn.disabled = true;
+    }
     return this;
   }
 
-  clearResolutionOutputs() {
-    this.resolutionOutputDoctor.val('');
-    this.resolutionOutputClient.val('');
+  clearResolutionOutput() {
+    if (this.resolutionOutputDoctor) {
+      this.resolutionOutputDoctor.value = '';
+    } else {
+      this.resolutionOutputClient.value = '';
+    }
     return this;
   }
 }
