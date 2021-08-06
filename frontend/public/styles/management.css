@@ -53,3 +53,9 @@
 #search-resolution-doctor:hover {
   background-color: rgba(25, 135, 84, 0.6);
 }
+
+.ttl {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 0.3rem;
+}

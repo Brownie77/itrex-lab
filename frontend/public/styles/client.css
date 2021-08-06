@@ -9,20 +9,11 @@
 }
 
 #add-to-queue-form {
-  display: inline-block;
+  display: flex;
 }
 
-#set-ttl {
-  margin-top: 1rem;
-  display: block;
-}
-
-.form-check-label {
-  font-size: 15px;
-}
-
-.form-check {
-  margin-top: 1rem;
+#add-to-queue-form > input {
+  height: 38px;
 }
 
 #use-default-TTL-check:focus {
@@ -31,7 +22,8 @@
 
 #add-to-queue-btn {
   float: right;
-  margin-top: 1rem;
+  margin-left: 0.3rem;
+  border-radius: 8px;
 }
 
 #resolution-search-form {

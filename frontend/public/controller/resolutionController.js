@@ -7,6 +7,8 @@ export default class ResolutionController {
     this.EmptyResolutionMsg = '<empty>';
     this.NoPatientFoundMsg = '<no such patient>';
 
+    //TODO: fix error messages
+
     $('#add-to-queue-btn').click(this.handleNewPatient.bind(this));
     $('#resolution-add-btn').click(this.handleAddResolution.bind(this));
     $('#search-resolution-client').click(this.handleSearchClient.bind(this));
@@ -14,44 +16,38 @@ export default class ResolutionController {
     $('#resolution-delete-btn').click(this.handleDeleteResolution.bind(this));
   }
 
-  handleNewPatient() {
+  async handleNewPatient() {
     const patient = this.view.getNameFromInput();
-    this.model.add(patient);
+    await this.model.add(patient);
   }
 
-  handleAddResolution() {
+  async handleAddResolution() {
     const resolution = this.view.getCurrentAppointmentResolutionAndClearInput();
+    const ttl = this.view.getTTLAndClearInput() || null;
     const patient = this.view.getCurrentPatientName();
-    this.model.setByName(patient, resolution);
+    await this.model.setByName(patient, resolution, ttl);
   }
 
-  handleSearchClient() {
+  async handleSearchClient() {
     const searchName = this.view.getClientSearchInput();
-    let textToDisplay = this.NoPatientFoundMsg;
-    if (this.model.isIn(searchName)) {
-      const resolution = this.model.getByName(searchName);
-      textToDisplay = resolution || this.EmptyResolutionMsg;
-    }
+    const resolution = await this.model.getByName(searchName);
+    const textToDisplay = resolution || this.EmptyResolutionMsg;
     this.view.displayResolutionClientAndClearSearchInput(textToDisplay);
   }
 
-  handleSearchDoctor() {
+  async handleSearchDoctor() {
     const searchName = this.view.getDoctorSearchInput();
-    let textToDisplay = this.NoPatientFoundMsg;
-    const exists = this.model.isIn(searchName);
-    if (exists) {
-      const resolution = this.model.getByName(searchName);
-      textToDisplay = resolution || this.EmptyResolutionMsg;
-      this.selectedPatient = searchName;
-      if (resolution) {
-        this.view.setDeleteButtonState(false);
-      }
+    const resolution = await this.model.getByName(searchName);
+    const textToDisplay = resolution || this.EmptyResolutionMsg;
+    this.selectedPatient = searchName;
+    if (resolution) {
+      this.view.setDeleteButtonState(false);
     }
     this.view.displayResolutionDoctorAndClearSearchInput(textToDisplay);
   }
 
-  handleDeleteResolution() {
-    this.model.delete(this.selectedPatient);
+  async handleDeleteResolution() {
+    await this.model.delete(this.selectedPatient);
     this.view.clearResolutionOutputs().setDeleteButtonState(true);
   }
 }

@@ -6,7 +6,8 @@
         "node": true,
         "commonjs": true,
         "jquery": true,
-        "jest": true
+        "jest": true,
+        "axios": true
     },
     "extends": [
         "airbnb-base"

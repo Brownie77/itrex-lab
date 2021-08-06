@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import morgan from 'morgan';
 
 import queueRoutes from './routes/client.js';
 import doctorRoutes from './routes/doctor.js';
@@ -8,9 +7,8 @@ import doctorRoutes from './routes/doctor.js';
 import err404Handle from './middleware/notFound.js';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-app.use(morgan('tiny'));
 app.use(express.static(path.join(path.resolve(), 'public')));
 
 app.use('/queue', queueRoutes);
@@ -23,4 +21,4 @@ app.get('/', (req, res) => {
 app.use(err404Handle);
 
 app.listen(PORT);
-console.log(`Listening on port ${PORT}...`);
+console.log(`The frontend server is listening on port ${PORT}...`);

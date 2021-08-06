@@ -5,6 +5,7 @@ export default class ResolutionView {
     this.currentPatient = $('#placeholder');
     this.queueInput = $('#name');
     this.addResolutionInput = $('#resolution-text');
+    this.resolutionTTL = $('#resolution-ttl');
     this.resolutionOutputDoctor = $('#doctor-resolution-found');
     this.resolutionOutputClient = $('#client-resolution-found');
     this.deleteResolutionBtn = $('#resolution-delete-btn');
@@ -28,6 +29,12 @@ export default class ResolutionView {
 
   getDoctorSearchInput() {
     return this.resolutionSearchInputDoctor.val().toUpperCase();
+  }
+
+  getTTLAndClearInput() {
+    const ttl = this.resolutionTTL.val();
+    this.resolutionTTL.val('');
+    return ttl;
   }
 
   getCurrentAppointmentResolutionAndClearInput() {

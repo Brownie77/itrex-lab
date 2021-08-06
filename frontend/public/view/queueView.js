@@ -6,14 +6,6 @@ export default class QueueView {
     this.checkbox = $('#use-default-TTL-check') || null;
   }
 
-  hideOrShowTTLInput() {
-    if (this.ttl.css('display') === 'block') {
-      this.ttl.css('display', 'none');
-    } else {
-      this.ttl.css('display', 'block');
-    }
-  }
-
   getCurrentlyDisplayedPatient() {
     return this.queueDisplay.text().toUpperCase();
   }
@@ -33,9 +25,5 @@ export default class QueueView {
     const ttl = this.ttl.val();
     this.ttl.val('');
     return ttl;
-  }
-
-  shouldKeepForever() {
-    return this.checkbox.is(':checked');
   }
 }
