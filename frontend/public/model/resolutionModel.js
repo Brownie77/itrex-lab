@@ -1,9 +1,4 @@
 export default class ResolutionModel {
-  constructor() {
-    this.storageName = 'resolutions';
-    this.resolutionMap = new Map();
-  }
-
   getByName(name) {
     return axios
       .get(`http://localhost:8080/resolution/get/${name}`)
