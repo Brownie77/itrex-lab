@@ -29,12 +29,13 @@ export default class QueueController {
   handleAddToQueue() {
     const newPatient = this.view.getNameFromInputAndClearInput();
     let ttl = null;
+    const toMinutes = 1000 * 60;
     if (!this.view.shouldKeepForever()) {
       ttl = this.view.getTTLAndClearInput();
       if (Number.isNaN(ttl)) {
         throw new Error('TTL expected to be a number.');
       }
-      ttl *= 1000 * 60;
+      ttl *= toMinutes;
     }
 
     if (ttl) {
