@@ -4,22 +4,6 @@ const router = Router();
 
 /**
  * @swagger
- * components:
- *  schemas:
- *    Patient:
- *      type: object
- *      required:
- *        - name
- *      properties:
- *        name:
- *          type: string
- *          description: Patient's name
- *      example:
- *        name: John
- */
-
-/**
- * @swagger
  *  /queue/first:
  *    get:
  *     summary: Returns the first patient from the queue
@@ -57,7 +41,7 @@ router.get('/first', (req, res) => {
  *            $ref: '#/components/schemas/Patient'
  *     responses:
  *      200:
- *        description: The patient was added successfully
+ *        description: The patient was successfully added
  *        content:
  *          application/json:
  *            schema:
@@ -88,7 +72,7 @@ router.post('/add', (req, res) => {
  *            $ref: '#/components/schemas/Patient'
  *     responses:
  *      204:
- *        description: Patient was deleted successfully
+ *        description: The patient was successfully dequeued
  *      404:
  *        description: There is no such patient in the queue
  *      500:
@@ -100,3 +84,19 @@ router.delete('/delete', (req, res) => {
 });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Patient:
+ *      type: object
+ *      required:
+ *        - name
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: Patient's name
+ *      example:
+ *        name: John
+ */
