@@ -1,10 +1,11 @@
 const { Router } = require('express');
+const Controller = require('./controller');
 
 const router = Router();
 
 /**
  * @swagger
- *  /resolution/get/{name}:
+ *  /resolutions/{name}:
  *    get:
  *     summary: Returns the resolution for the patient
  *     tags:
@@ -32,43 +33,11 @@ const router = Router();
  *        description: Unexpected server error
  */
 
-router.get('/get/:id', (req, res) => {
-  res.status(200).send({ name: req.params.id, resolution: 'text' });
-});
+router.get('/:id', Controller.get);
 
 /**
  * @swagger
- *  /resolution/add:
- *    post:
- *     summary: Create new patient's card
- *     tags:
- *      - Resolution
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Patient'
- *     responses:
- *      200:
- *        description: The patient was successfully added
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Patient'
- *      409:
- *        description: The card already exists
- *      500:
- *        description: Unexpected server error
- */
-
-router.post('/add', (req, res) => {
-  res.status(200).send('ok');
-});
-
-/**
- * @swagger
- *  /resolution/set:
+ *  /resolutions/{name}:
  *    put:
  *     summary: Set resolution
  *     tags:
@@ -98,13 +67,11 @@ router.post('/add', (req, res) => {
  *        description: Unexpected server error
  */
 
-router.put('/set', (req, res) => {
-  res.status(200).send('set');
-});
+router.put('/:id', Controller.set);
 
 /**
  * @swagger
- *  /resolution/delete:
+ *  /resolutions/{name}:
  *    delete:
  *     summary: Delete the resolution for the patient
  *     tags:
@@ -124,8 +91,6 @@ router.put('/set', (req, res) => {
  *        description: Unexpected server error
  */
 
-router.delete('/delete', (req, res) => {
-  res.status(200).send('delete');
-});
+router.delete('/:id', Controller.delete);
 
 module.exports = router;

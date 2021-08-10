@@ -5,8 +5,7 @@ const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
-const queueRoutes = require('./routes/queue');
-const resolutionRoutes = require('./routes/resolution');
+const { queueRoutes, resolutionRoutes } = require('./src/index');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -45,7 +44,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/queue', queueRoutes);
-app.use('/resolution', resolutionRoutes);
+app.use('/resolutions', resolutionRoutes);
 
-app.listen(PORT);
-console.log(`The API server is listening on port ${PORT}...`);
+app.listen(PORT, (error) => {
+  if (error) throw error;
+  console.log(`The API server is listening on port ${PORT}...`);
+});

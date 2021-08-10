@@ -3,9 +3,15 @@ export default class QueueController {
     this.view = queueView;
     this.model = queueModel;
 
-    $(document).ready(this.handleLoad.bind(this));
-    $('#add-to-queue-btn').click(this.handleAddToQueue.bind(this));
-    $('#next-patient').click(this.handleProcessCurrentPatient.bind(this));
+    this.EmptyQueueMsg = '<empty>';
+
+    document.addEventListener('DOMContentLoaded', this.handleLoad.bind(this));
+    document
+      .getElementById('add-to-queue-btn')
+      ?.addEventListener('click', this.handleAddToQueue.bind(this));
+    document
+      .getElementById('next-patient')
+      ?.addEventListener('click', this.handleProcessCurrentPatient.bind(this));
   }
 
   async handleLoad() {
@@ -16,9 +22,10 @@ export default class QueueController {
   }
 
   async handleProcessCurrentPatient() {
-    await this.model.dequeue();
-    const newPatient = await this.model.getFirst();
-    this.view.setCurrentlyDisplayedPatient(newPatient);
+    if (this.view.getCurrentlyDisplayedPatient() !== this.EmptyQueueMsg.toUpperCase()) {
+      const newPatient = (await this.model.getNext()) || this.EmptyQueueMsg;
+      this.view.setCurrentlyDisplayedPatient(newPatient);
+    }
   }
 
   async handleAddToQueue() {
