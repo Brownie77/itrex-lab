@@ -36,6 +36,9 @@ module.exports = new (class {
   }
 
   reset(key) {
+    if (!this.sc.exist(this.type, this.dbName, key)) {
+      throw new Error(errorMsgs.notfound);
+    }
     this.sc.insert(this.dbName, key, { resolution: null, ttl: 0 });
   }
 

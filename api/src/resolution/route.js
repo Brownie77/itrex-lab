@@ -16,7 +16,6 @@ const router = Router();
  *        schema:
  *          type: string
  *          required: true
- *          example: Dima
  *          description: Patient's name
  *     responses:
  *      200:
@@ -28,7 +27,7 @@ const router = Router();
  *              example:
  *                reolution: Some text here
  *      404:
- *        description: No such patient
+ *        description: Card doesn't exist
  *      500:
  *        description: Unexpected server error
  */
@@ -42,6 +41,13 @@ router.get('/:id', Controller.get);
  *     summary: Set resolution
  *     tags:
  *      - Resolution
+ *     parameters:
+ *      - in: path
+ *        name: name
+ *        schema:
+ *          type: string
+ *          required: true
+ *          description: Patient's name
  *     requestBody:
  *      required: true
  *      content:
@@ -49,20 +55,14 @@ router.get('/:id', Controller.get);
  *          schema:
  *            type: object
  *            properties:
- *              name:
- *                type: string
- *                required: true
  *              resolution:
  *                type: string
  *                required: true
  *            example:
- *              name: John
  *              resolution: Some resolution here
  *     responses:
  *      200:
  *        description: The resolution for the patient was successfully set
- *      404:
- *        description: The card doesn't exist
  *      500:
  *        description: Unexpected server error
  */
@@ -76,14 +76,15 @@ router.put('/:id', Controller.set);
  *     summary: Delete the resolution for the patient
  *     tags:
  *      - Resolution
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Patient'
+ *     parameters:
+ *      - in: path
+ *        name: name
+ *        schema:
+ *          type: string
+ *          required: true
+ *          description: Patient's name
  *     responses:
- *      204:
+ *      200:
  *        description: The resolution was successfully deleted
  *      404:
  *        description: There is no such patient
