@@ -1,4 +1,9 @@
 const { Router } = require('express');
+const QueueController = require('./controller');
+const schemas = require('./validationSchemas');
+const validate = require('../../middleware/validate');
+
+const controller = new QueueController();
 
 const router = Router();
 
@@ -16,21 +21,17 @@ const router = Router();
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Patient'
- *      404:
- *        description: The queue is empty
  *      500:
  *        description: Unexpected server error
  */
 
-router.get('/first', (req, res) => {
-  res.status(200).send({ name: 1 });
-});
+router.get('/first', controller.first);
 
 /**
  * @swagger
- *  /queue/add:
+ *  /queue:
  *    post:
- *     summary: Add a new patient to the queue
+ *     summary: Add new patient to the queue
  *     tags:
  *      - Queue
  *     requestBody:
@@ -52,36 +53,31 @@ router.get('/first', (req, res) => {
  *        description: Unexpected server error
  */
 
-router.post('/add', (req, res) => {
-  const { name } = req.body;
-  res.status(200).send({ name });
-});
+router.post(
+  '/',
+  validate({ body: schemas.patientSchema }),
+  controller.addNewPatient,
+);
 
 /**
  * @swagger
- *  /queue/delete:
- *    delete:
- *     summary: Delete the first patient from the queue
+ *  /queue/next:
+ *    get:
+ *     summary: Returns next patient in the queue
  *     tags:
  *      - Queue
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Patient'
  *     responses:
- *      204:
- *        description: The patient was successfully dequeued
- *      404:
- *        description: There is no such patient in the queue
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Patient'
  *      500:
  *        description: Unexpected server error
  */
 
-router.delete('/delete', (req, res) => {
-  res.status(200).send();
-});
+router.get('/next', controller.next);
 
 module.exports = router;
 

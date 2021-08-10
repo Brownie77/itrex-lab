@@ -1,8 +1,7 @@
 import express from 'express';
 import path from 'path';
 
-import queueRoutes from './routes/client.js';
-import doctorRoutes from './routes/doctor.js';
+import { queueRoutes, doctorRoutes } from './routes/index.js';
 
 import err404Handle from './middleware/notFound.js';
 
@@ -20,5 +19,7 @@ app.get('/', (req, res) => {
 
 app.use(err404Handle);
 
-app.listen(PORT);
-console.log(`The frontend server is listening on port ${PORT}...`);
+app.listen(PORT, (error) => {
+  if (error) throw error;
+  console.log(`The frontend server is listening on port ${PORT}...`);
+});
