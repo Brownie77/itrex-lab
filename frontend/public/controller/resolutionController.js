@@ -51,10 +51,10 @@ export default class ResolutionController {
       let textToDisplay = resolution;
       if (resolution) {
         this.selectedPatient = searchName;
-      } else if (status === 404) {
-        textToDisplay = this.NoPatientFoundMsg;
-      } else {
+      } else if (status === 200) {
         textToDisplay = this.EmptyResolutionMsg;
+      } else {
+        textToDisplay = this.NoPatientFoundMsg;
       }
       this.view.displayResolutionClientAndClearSearchInput(textToDisplay);
     }
@@ -68,10 +68,10 @@ export default class ResolutionController {
       if (resolution) {
         this.selectedPatient = searchName;
         this.view.setDeleteButtonState(true);
-      } else if (status === 404) {
-        textToDisplay = this.NoPatientFoundMsg;
-      } else {
+      } else if (status === 200) {
         textToDisplay = this.EmptyResolutionMsg;
+      } else {
+        textToDisplay = this.NoPatientFoundMsg;
       }
 
       this.view.displayResolutionDoctorAndClearSearchInput(textToDisplay);
