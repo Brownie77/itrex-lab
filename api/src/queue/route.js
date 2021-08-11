@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const Controller = require('./controller');
 
+const controller = new Controller();
+
 const router = Router();
 
 /**
@@ -21,7 +23,7 @@ const router = Router();
  *        description: Unexpected server error
  */
 
-router.get('/first', Controller.first);
+router.get('/first', controller.first);
 
 /**
  * @swagger
@@ -49,7 +51,7 @@ router.get('/first', Controller.first);
  *        description: Unexpected server error
  */
 
-router.post('/', Controller.addNewPatient);
+router.post('/', controller.addNewPatient);
 
 /**
  * @swagger
@@ -69,7 +71,7 @@ router.post('/', Controller.addNewPatient);
  *        description: Unexpected server error
  */
 
-router.get('/next', Controller.next);
+router.get('/next', controller.next);
 
 module.exports = router;
 

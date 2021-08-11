@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const Controller = require('./controller');
 
+const controller = new Controller();
+
 const router = Router();
 
 /**
@@ -32,7 +34,7 @@ const router = Router();
  *        description: Unexpected server error
  */
 
-router.get('/:id', Controller.get);
+router.get('/:id', controller.get);
 
 /**
  * @swagger
@@ -67,7 +69,7 @@ router.get('/:id', Controller.get);
  *        description: Unexpected server error
  */
 
-router.put('/:id', Controller.set);
+router.put('/:id', controller.set);
 
 /**
  * @swagger
@@ -92,6 +94,6 @@ router.put('/:id', Controller.set);
  *        description: Unexpected server error
  */
 
-router.delete('/:id', Controller.delete);
+router.delete('/:id', controller.delete);
 
 module.exports = router;

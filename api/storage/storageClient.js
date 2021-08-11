@@ -1,6 +1,6 @@
 const Database = require('./database');
 
-module.exports = new (class {
+module.exports = class {
   constructor() {
     this.storage = Database;
   }
@@ -21,6 +21,9 @@ module.exports = new (class {
       case 'map':
         return this.storage[db].has(value);
       case 'array':
+        if (typeof value !== 'object' || value.name === undefined) {
+          throw new Error('Object with property name expected.');
+        }
         return this.storage[db].some((e) => e.name === value.name);
       default:
         throw new Error('Unknown database type parameter');
@@ -63,4 +66,4 @@ module.exports = new (class {
       throw new Error(`Database ${db} doesn't exist.`);
     } else return true;
   }
-})();
+};

@@ -1,9 +1,9 @@
 const StorageClient = require('../../storage/storageClient');
 const errorMessages = require('../errorMsgs');
 
-module.exports = new (class {
+module.exports = class {
   constructor() {
-    this.sc = StorageClient;
+    this.sc = new StorageClient();
     this.dbName = 'Queue';
     this.type = 'array';
     this.sc.create(this.type, this.dbName);
@@ -28,4 +28,4 @@ module.exports = new (class {
     }
     this.sc.insert(this.dbName, patient);
   }
-})();
+};

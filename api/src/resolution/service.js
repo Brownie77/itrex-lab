@@ -1,9 +1,9 @@
 const StorageClient = require('../../storage/storageClient');
 const errorMsgs = require('../errorMsgs');
 
-module.exports = new (class {
+module.exports = class {
   constructor() {
-    this.sc = StorageClient;
+    this.sc = new StorageClient();
     this.dbName = 'Resolutions';
     this.type = 'map';
     this.sc.create(this.type, this.dbName);
@@ -25,7 +25,7 @@ module.exports = new (class {
       throw new Error(errorMsgs.notfound);
     }
     if (this.#isOutdated(key)) {
-      this.reset(key);
+      this.#reset(key);
     }
     return this.sc.get(this.dbName, key);
   }
@@ -35,7 +35,7 @@ module.exports = new (class {
     return ttl !== 0 && ttl < Date.now();
   }
 
-  reset(key) {
+  #reset(key) {
     if (!this.sc.exist(this.type, this.dbName, key)) {
       throw new Error(errorMsgs.notfound);
     }
@@ -43,6 +43,6 @@ module.exports = new (class {
   }
 
   delete({ id }) {
-    this.reset(id);
+    this.#reset(id);
   }
-})();
+};

@@ -6,9 +6,9 @@ const errorMessages = require('../errorMsgs');
 const errorStatus = require('../../utils/errStatus')(errorMessages);
 const adapt = require('../../utils/adapt');
 
-module.exports = new (class {
+module.exports = class {
   constructor() {
-    this.service = Service;
+    this.service = new Service();
     this.validate = validate;
     this.adapt = adapt;
   }
@@ -56,4 +56,4 @@ module.exports = new (class {
       return res.status(status).send();
     }
   };
-})();
+};
