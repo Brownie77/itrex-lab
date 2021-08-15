@@ -1,12 +1,11 @@
 const errorMsgs = require('../errorMsgs');
 const TimeHelper = require('../../utils/timeHelper');
-const config = require('../../config');
 const { DataNotFoundError } = require('../../errors/customDataErrs');
 
 module.exports = class Service {
   constructor(StorageClient) {
     this.storage = StorageClient;
-    this.timeHelper = new TimeHelper(config.ttl_default);
+    this.timeHelper = new TimeHelper(process.env.TTL_DEF);
     this.nullified = { resolution: null, ttl: null };
   }
 

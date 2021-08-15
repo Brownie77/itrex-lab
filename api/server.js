@@ -6,20 +6,19 @@ const morgan = require('morgan');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
-const config = require('./config');
 
 const { queueRoutes, resolutionRoutes } = require('./src/index');
 const errorHandle = require('./middleware/errHandle');
 
 const app = express();
 
-const { PORT } = config;
+const PORT = process.env.SERVER_PORT || 8080;
 
 app.use(morgan('tiny'));
 
 app.use(
   cors({
-    origin: config.allow_cors_from,
+    origin: process.env.ALLOW_CORS_FROM,
   }),
 );
 
@@ -49,6 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/queue', queueRoutes);
 app.use('/resolutions', resolutionRoutes);
+
 app.use(errorHandle);
 
 app.listen(PORT, (error) => {

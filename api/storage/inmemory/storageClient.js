@@ -1,11 +1,13 @@
+const StorageClientInterface = require('../storageClientInterface');
 const errs = require('../../src/errorMsgs');
 const {
   DatabaseWrongTypeError,
   DatabaseUnknownTypeError,
 } = require('../../errors/customDatabaseErrs');
 
-module.exports = class StorageClient {
+module.exports = class StorageClient extends StorageClientInterface {
   constructor(Database, DBname, type = null) {
+    super();
     this.storage = Database;
     this.name = DBname;
     this.type = type;

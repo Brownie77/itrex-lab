@@ -6,13 +6,13 @@ module.exports = class Service {
     this.storage = StorageClient;
   }
 
-  getNext() {
-    this.#deleteFirst();
+  async getNext() {
+    await this.#deleteFirst();
     return this.getFirst();
   }
 
   async #deleteFirst() {
-    await this.storage.delete();
+    return this.storage.delete();
   }
 
   async getFirst() {
