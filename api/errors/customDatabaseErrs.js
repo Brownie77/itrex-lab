@@ -28,14 +28,6 @@ class DatabaseUnknownTypeError extends GlobalDatabaseError {
   }
 }
 
-class DatabaseDoesntExistError extends GlobalDatabaseError {
-  constructor(message) {
-    super(message);
-    this.name = 'DatabaseDoesntExistError';
-  }
-}
-
 module.exports.DatabaseAlreadyExistsError = DatabaseAlreadyExistsError;
 module.exports.DatabaseWrongTypeError = DatabaseWrongTypeError;
 module.exports.DatabaseUnknownTypeError = DatabaseUnknownTypeError;
-module.exports.DatabaseDoesntExistError = DatabaseDoesntExistError;

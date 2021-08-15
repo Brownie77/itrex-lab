@@ -11,6 +11,7 @@ module.exports = class TimeHelper {
     return Date.now() + ttl * this.toMs;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   isOutdated(ttl) {
     return ttl ? ttl < Date.now() : false;
   }

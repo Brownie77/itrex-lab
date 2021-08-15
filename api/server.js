@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -11,18 +13,17 @@ const errorHandle = require('./middleware/errHandle');
 
 const app = express();
 
-const PORT = process.env.PORT || config.PORT;
+const { PORT } = config;
 
 app.use(morgan('tiny'));
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200,
+    origin: config.allow_cors_from,
   }),
 );
 
-const options = {
+const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
@@ -39,7 +40,7 @@ const options = {
   apis: ['./src/queue/route.js', './src/resolution/route.js'],
 };
 
-const specs = swaggerJSDoc(options);
+const specs = swaggerJSDoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 

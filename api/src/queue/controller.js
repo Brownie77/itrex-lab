@@ -1,13 +1,11 @@
-const Service = require('./service');
-
 module.exports = class Controller {
-  constructor() {
-    this.service = new Service();
+  constructor(Service) {
+    this.service = Service;
   }
 
-  next = (req, res, next) => {
+  next = async (req, res, next) => {
     try {
-      const nextPatient = this.service.getNext();
+      const nextPatient = await this.service.getNext();
 
       return res.status(200).send(nextPatient);
     } catch (error) {
@@ -15,9 +13,9 @@ module.exports = class Controller {
     }
   };
 
-  first = (req, res, next) => {
+  first = async (req, res, next) => {
     try {
-      const patient = this.service.getFirst();
+      const patient = await this.service.getFirst();
 
       return res.status(200).send(patient);
     } catch (error) {
@@ -25,11 +23,11 @@ module.exports = class Controller {
     }
   };
 
-  addNewPatient = (req, res, next) => {
+  addNewPatient = async (req, res, next) => {
     try {
       const data = req.body;
 
-      this.service.enqueue(data);
+      await this.service.enqueue(data);
 
       return res.status(200).send();
     } catch (error) {

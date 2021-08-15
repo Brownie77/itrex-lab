@@ -1,13 +1,9 @@
-const StorageClient = require('../../storage/storageClient');
 const errorMessages = require('../errorMsgs');
 const { DataConfilctError } = require('../../errors/customDataErrs');
 
 module.exports = class Service {
-  constructor() {
-    this.storage = new StorageClient();
-    this.dbName = 'Queue';
-    this.type = 'array';
-    this.storage.create(this.type, this.dbName);
+  constructor(StorageClient) {
+    this.storage = StorageClient;
   }
 
   getNext() {
@@ -15,18 +11,20 @@ module.exports = class Service {
     return this.getFirst();
   }
 
-  #deleteFirst() {
-    this.storage.delete(this.dbName);
+  async #deleteFirst() {
+    await this.storage.delete();
   }
 
-  getFirst() {
-    return this.storage.get(this.dbName);
+  async getFirst() {
+    return this.storage.get();
   }
 
-  enqueue(patient) {
-    if (this.storage.exist(this.type, this.dbName, patient)) {
+  async enqueue(patient) {
+    const exist = await this.storage.exist(patient);
+    if (exist) {
       throw new DataConfilctError(errorMessages.conflict);
+    } else {
+      await this.storage.insert(patient);
     }
-    this.storage.insert(this.dbName, patient);
   }
 };

@@ -1,32 +1,29 @@
-const Service = require('./service');
-
 const adapt = require('../../utils/adapt');
 
 module.exports = class Controller {
-  constructor() {
-    this.service = new Service();
+  constructor(Service) {
+    this.service = Service;
     this.adapt = adapt;
   }
 
-  get = (req, res, next) => {
+  get = async (req, res, next) => {
     try {
       const data = req.params;
 
-      const found = this.service.getByKey(data);
+      const found = await this.service.getByKey(data);
 
       delete found.ttl;
-
       return res.status(200).send(found);
     } catch (error) {
       return next(error);
     }
   };
 
-  set = (req, res, next) => {
+  set = async (req, res, next) => {
     try {
       const data = this.adapt(req);
 
-      this.service.set(data);
+      await this.service.set(data);
 
       return res.status(200).send();
     } catch (error) {
@@ -34,11 +31,11 @@ module.exports = class Controller {
     }
   };
 
-  delete = (req, res, next) => {
+  delete = async (req, res, next) => {
     try {
       const data = this.adapt(req);
 
-      this.service.delete(data);
+      await this.service.delete(data);
 
       return res.status(200).send();
     } catch (error) {

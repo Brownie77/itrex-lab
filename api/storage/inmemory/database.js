@@ -1,7 +1,8 @@
-const { DatabaseAlreadyExistsError } = require('../errors/customDatabaseErrs');
+const {
+  DatabaseAlreadyExistsError,
+} = require('../../errors/customDatabaseErrs');
 
-// making sure we will ALWAYS have only one instance of the database
-module.exports = new (class Database {
+module.exports = class Database {
   allocateArray(name) {
     if (this[name]) {
       throw new DatabaseAlreadyExistsError(
@@ -21,4 +22,4 @@ module.exports = new (class Database {
       this[name] = new Map();
     }
   }
-})();
+};
