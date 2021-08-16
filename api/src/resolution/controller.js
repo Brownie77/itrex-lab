@@ -1,4 +1,4 @@
-const { ok } = require('../statuses');
+const { ok, created } = require('../statuses');
 
 module.exports = class Controller {
   constructor(Service) {
@@ -20,16 +20,19 @@ module.exports = class Controller {
 
   set = async (req, res, next) => {
     try {
-        const data = {
-          id: req.params.id,
-          resolution: req.body.resolution,
-          ttl: req.body.ttl,
-        };
+      const data = {
+        id: req.params.id,
+        resolution: req.body.resolution,
+        ttl: req.body.ttl,
+      };
 
       await this.service.set(data);
 
-      return res.status(ok).send();
-
+      return res.status(created).send();
+    } catch (error) {
+      return next(error);
+    }
+  };
 
   delete = async (req, res, next) => {
     try {

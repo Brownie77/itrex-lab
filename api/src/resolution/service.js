@@ -29,13 +29,15 @@ module.exports = class ResolutionService {
     }
     return result;
   }
-  
+
   #setTTL(ttl) {
     if (ttl === 0) {
       return Date.now() + this.timeHelper.minToMs(this.ttl_default);
     }
     return Date.now() + this.timeHelper.minToMs(ttl);
+  }
 
+  // eslint-disable-next-line class-methods-use-this
   #isOutdated(ttl) {
     return ttl ? ttl < Date.now() : false;
   }

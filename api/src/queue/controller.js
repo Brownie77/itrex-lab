@@ -1,4 +1,4 @@
-const { ok } = require('../statuses');
+const { ok, created } = require('../statuses');
 
 module.exports = class Controller {
   constructor(Service) {
@@ -31,7 +31,7 @@ module.exports = class Controller {
 
       await this.service.enqueue(data);
 
-      return res.status(ok).send();
+      return res.status(created).send();
     } catch (error) {
       return next(error);
     }

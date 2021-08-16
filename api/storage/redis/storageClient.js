@@ -1,5 +1,8 @@
 const util = require('util');
 const StorageClientInterface = require('../storageClientInterface');
+const errs = require('../../src/errorMsgs');
+const { DatabaseUnknownTypeError } = require('../../errors/customDatabaseErrs');
+const typesEnum = require('../storageTypes');
 
 module.exports = class StorageClient extends StorageClientInterface {
   constructor(Database, DBname, type) {
@@ -12,44 +15,60 @@ module.exports = class StorageClient extends StorageClientInterface {
     this.#init();
   }
 
-  async insert(valOrKey, value = undefined) {
-    if (value !== undefined) {
-      this.storage.set(valOrKey, JSON.stringify(value));
-    } else {
-      const array = await this.#getArray();
-      array.push(valOrKey);
-      this.storage.set(this.name, JSON.stringify(array));
+  async insert(valOrKey, value) {
+    switch (this.type) {
+      case typesEnum.MAP:
+        return this.storage.set(valOrKey, JSON.stringify(value));
+      case typesEnum.ARRAY: {
+        const array = await this.#getArray();
+        array.push(valOrKey);
+        return this.storage.set(this.name, JSON.stringify(array));
+      }
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
     }
   }
 
   async exist(value) {
-    if (this.type === 'map') {
-      return this.storage.exists(value);
-    }
-    if (this.type === 'array') {
-      const array = await this.#getArray();
-      return array.some((e) => e.name === value.name);
-    }
-    throw new Error('Unexpected type');
-  }
-
-  async delete(key = undefined) {
-    if (key !== undefined) {
-      this.client.del(key);
-    } else {
-      const array = await this.#getArray();
-      array.shift();
-      this.storage.set(this.name, JSON.stringify(array));
+    switch (this.type) {
+      case typesEnum.MAP:
+        return this.storage.exists(value);
+      case typesEnum.ARRAY: {
+        const array = await this.#getArray();
+        return array.some((e) => e.name === value.name);
+      }
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
     }
   }
 
-  async get(key = undefined) {
-    if (key !== undefined) {
-      const data = await this.storage.get(key);
-      return JSON.parse(data);
+  async delete(key) {
+    switch (this.type) {
+      case typesEnum.MAP:
+        return this.client.del(key);
+      case typesEnum.ARRAY: {
+        const array = await this.#getArray();
+        array.shift();
+        return this.storage.set(this.name, JSON.stringify(array));
+      }
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
     }
-    const array = await this.#getArray();
-    return array[0];
+  }
+
+  async get(key) {
+    switch (this.type) {
+      case typesEnum.MAP: {
+        const data = await this.storage.get(key);
+        return JSON.parse(data);
+      }
+      case typesEnum.ARRAY: {
+        const array = await this.#getArray();
+        return array[0];
+      }
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
+    }
   }
 
   async #getArray() {

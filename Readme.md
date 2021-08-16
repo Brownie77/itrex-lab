@@ -3,7 +3,7 @@
 To start the application with storing data in app memory, go to the api directory, set right configuration in <b>.env</b> file, go back to the root directory and run:
 
 ```bash
-docker-compose up --profile inmemory -d
+docker-compose --profile inmemory up -d
 ```
 
 To start the application with storing data in redis, go to the api directory, set right configuration in <b>.env</b> file, go back to the root directory and run:

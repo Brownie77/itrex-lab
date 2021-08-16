@@ -4,9 +4,10 @@ const {
   DatabaseWrongTypeError,
   DatabaseUnknownTypeError,
 } = require('../../errors/customDatabaseErrs');
+const typesEnum = require('../storageTypes');
 
 module.exports = class StorageClient extends StorageClientInterface {
-  constructor(Database, DBname, type = null) {
+  constructor(Database, DBname, type) {
     super();
     this.storage = Database;
     this.name = DBname;
@@ -14,19 +15,22 @@ module.exports = class StorageClient extends StorageClientInterface {
     this.#create(this.type, this.name);
   }
 
-  async insert(valOrKey, value = undefined) {
-    if (value !== undefined) {
-      this.storage[this.name].set(valOrKey, value);
-    } else {
-      this.storage[this.name].push(valOrKey);
+  async insert(valOrKey, value) {
+    switch (this.type) {
+      case typesEnum.MAP:
+        return this.storage[this.name].set(valOrKey, value);
+      case typesEnum.ARRAY:
+        return this.storage[this.name].push(valOrKey);
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
     }
   }
 
   async exist(value) {
     switch (this.type) {
-      case 'map':
+      case typesEnum.MAP:
         return this.storage[this.name].has(value);
-      case 'array':
+      case typesEnum.ARRAY:
         if (typeof value !== 'object' || value.name === undefined) {
           throw new DatabaseWrongTypeError(
             "Object with property 'name' expected.",
@@ -38,27 +42,34 @@ module.exports = class StorageClient extends StorageClientInterface {
     }
   }
 
-  async delete(key = undefined) {
-    if (key !== undefined) {
-      this.storage[this.name].set(key, null);
-    } else {
-      this.storage[this.name].shift();
+  async delete(key) {
+    switch (this.type) {
+      case typesEnum.MAP:
+        return this.storage[this.name].set(key, null);
+      case typesEnum.ARRAY:
+        return this.storage[this.name].shift();
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
     }
   }
 
-  async get(key = undefined) {
-    if (key !== undefined) {
-      return { ...this.storage[this.name].get(key) };
+  async get(key) {
+    switch (this.type) {
+      case typesEnum.MAP:
+        return { ...this.storage[this.name].get(key) };
+      case typesEnum.ARRAY:
+        return this.storage[this.name][0];
+      default:
+        throw new DatabaseUnknownTypeError(errs.unknownDBType);
     }
-    return this.storage[this.name][0];
   }
 
   #create(type, db) {
     switch (type) {
-      case 'array':
+      case typesEnum.ARRAY:
         this.storage.allocateArray(db);
         break;
-      case 'map':
+      case typesEnum.MAP:
         this.storage.allocateMap(db);
         break;
       default:

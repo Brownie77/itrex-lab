@@ -16,7 +16,7 @@ module.exports = class Service {
   }
 
   async getFirst() {
-    return this.storage.getFromArray()
+    return this.storage.get();
   }
 
   async enqueue(patient) {
@@ -26,3 +26,5 @@ module.exports = class Service {
     } else {
       await this.storage.insert(patient);
     }
+  }
+};
