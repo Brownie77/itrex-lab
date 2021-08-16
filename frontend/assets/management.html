@@ -58,10 +58,13 @@
                 id="resolution-text"
                 rows="5"
                 placeholder="Input the resolution for the current patient"
+                required
               ></textarea>
               <div class="ttl">
                 <input
-                  type="text"
+                  type="number"
+                  min="0"
+                  oninput="validity.valid||(value='');"
                   class="form-control"
                   id="resolution-ttl"
                   placeholder="TTL in minutes"

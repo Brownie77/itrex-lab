@@ -1,9 +1,7 @@
 const { Router } = require('express');
-const QueueController = require('./controller');
+const controller = require('./init');
 const schemas = require('./validationSchemas');
 const validate = require('../../middleware/validate');
-
-const controller = new QueueController();
 
 const router = Router();
 

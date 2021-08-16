@@ -28,14 +28,14 @@ class DatabaseUnknownTypeError extends GlobalDatabaseError {
   }
 }
 
-class DatabaseDoesntExistError extends GlobalDatabaseError {
+class DatabaseFailedToConnectError extends GlobalDatabaseError {
   constructor(message) {
     super(message);
-    this.name = 'DatabaseDoesntExistError';
+    this.name = 'DatabaseFailedToConnectError';
   }
 }
 
 module.exports.DatabaseAlreadyExistsError = DatabaseAlreadyExistsError;
 module.exports.DatabaseWrongTypeError = DatabaseWrongTypeError;
 module.exports.DatabaseUnknownTypeError = DatabaseUnknownTypeError;
-module.exports.DatabaseDoesntExistError = DatabaseDoesntExistError;
+module.exports.DatabaseFailedToConnectError = DatabaseFailedToConnectError;

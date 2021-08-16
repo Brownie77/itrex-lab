@@ -21,5 +21,6 @@ class DataNotFoundError extends GlobalDataError {
   }
 }
 
+
 module.exports.DataConflictError = DataConflictError;
 module.exports.DataNotFoundError = DataNotFoundError;
