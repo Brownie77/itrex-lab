@@ -2,16 +2,17 @@ const errorMsgs = require('../errorMsgs');
 const TimeHelper = require('../../utils/timeHelper');
 const { DataNotFoundError } = require('../../errors/customDataErrs');
 
-module.exports = class Service {
+module.exports = class ResolutionService {
   constructor(StorageClient) {
     this.storage = StorageClient;
-    this.timeHelper = new TimeHelper(process.env.TTL_DEF);
+    this.timeHelper = new TimeHelper();
+    this.ttl_default = process.env.TTL_DEF;
     this.nullified = { resolution: null, ttl: null };
   }
 
   async set({ id: key, ...value }) {
     const updatedValue = Object.assign(value);
-    updatedValue.ttl = this.timeHelper.setTTL(value.ttl);
+    updatedValue.ttl = this.#setTTL(value.ttl);
     await this.storage.insert(key, updatedValue);
   }
 
@@ -21,15 +22,22 @@ module.exports = class Service {
       throw new DataNotFoundError(errorMsgs.notfound);
     }
     const result = await this.storage.get(key);
+
     if (this.#isOutdated(result.ttl)) {
       this.#reset(key);
       return this.nullified;
     }
     return result;
   }
+  
+  #setTTL(ttl) {
+    if (ttl === 0) {
+      return Date.now() + this.timeHelper.minToMs(this.ttl_default);
+    }
+    return Date.now() + this.timeHelper.minToMs(ttl);
 
   #isOutdated(ttl) {
-    return this.timeHelper.isOutdated(ttl);
+    return ttl ? ttl < Date.now() : false;
   }
 
   async #reset(key) {

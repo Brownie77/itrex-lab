@@ -7,7 +7,7 @@ class GlobalDataError extends Error {
   }
 }
 
-class DataConfilctError extends GlobalDataError {
+class DataConflictError extends GlobalDataError {
   constructor(message) {
     super(message);
     this.name = 'DataConfilctError';
@@ -21,5 +21,6 @@ class DataNotFoundError extends GlobalDataError {
   }
 }
 
-module.exports.DataConfilctError = DataConfilctError;
+
+module.exports.DataConflictError = DataConflictError;
 module.exports.DataNotFoundError = DataNotFoundError;

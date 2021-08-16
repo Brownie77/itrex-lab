@@ -1,3 +1,5 @@
+const { ok } = require('../statuses');
+
 module.exports = class Controller {
   constructor(Service) {
     this.service = Service;
@@ -7,7 +9,7 @@ module.exports = class Controller {
     try {
       const nextPatient = await this.service.getNext();
 
-      return res.status(200).send(nextPatient);
+      return res.status(ok).send(nextPatient);
     } catch (error) {
       return next(error);
     }
@@ -17,7 +19,7 @@ module.exports = class Controller {
     try {
       const patient = await this.service.getFirst();
 
-      return res.status(200).send(patient);
+      return res.status(ok).send(patient);
     } catch (error) {
       return next(error);
     }
@@ -29,7 +31,7 @@ module.exports = class Controller {
 
       await this.service.enqueue(data);
 
-      return res.status(200).send();
+      return res.status(ok).send();
     } catch (error) {
       return next(error);
     }

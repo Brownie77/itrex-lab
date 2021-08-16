@@ -1,9 +1,8 @@
-const adapt = require('../../utils/adapt');
+const { ok } = require('../statuses');
 
 module.exports = class Controller {
   constructor(Service) {
     this.service = Service;
-    this.adapt = adapt;
   }
 
   get = async (req, res, next) => {
@@ -13,7 +12,7 @@ module.exports = class Controller {
       const found = await this.service.getByKey(data);
 
       delete found.ttl;
-      return res.status(200).send(found);
+      return res.status(ok).send(found);
     } catch (error) {
       return next(error);
     }
@@ -21,23 +20,26 @@ module.exports = class Controller {
 
   set = async (req, res, next) => {
     try {
-      const data = this.adapt(req);
+        const data = {
+          id: req.params.id,
+          resolution: req.body.resolution,
+          ttl: req.body.ttl,
+        };
 
       await this.service.set(data);
 
-      return res.status(200).send();
-    } catch (error) {
-      return next(error);
-    }
-  };
+      return res.status(ok).send();
+
 
   delete = async (req, res, next) => {
     try {
-      const data = this.adapt(req);
+      const data = {
+        id: req.params.id,
+      };
 
       await this.service.delete(data);
 
-      return res.status(200).send();
+      return res.status(ok).send();
     } catch (error) {
       return next(error);
     }

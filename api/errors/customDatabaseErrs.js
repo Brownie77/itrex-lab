@@ -27,6 +27,7 @@ class DatabaseUnknownTypeError extends GlobalDatabaseError {
     this.name = 'DatabaseUnknownTypeError';
   }
 }
+
 class DatabaseFailedToConnectError extends GlobalDatabaseError {
   constructor(message) {
     super(message);
