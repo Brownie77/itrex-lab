@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const controller = require('./init');
+const resolutionController = require('./init');
 const validate = require('../../middleware/validate');
 const schemas = require('./validationSchemas');
 
@@ -34,7 +34,11 @@ const router = Router();
  *        description: Unexpected server error
  */
 
-router.get('/:id', validate({ params: schemas.IDSchema }), controller.get);
+router.get(
+  '/:id',
+  validate({ params: schemas.IDSchema }),
+  resolutionController.get,
+);
 
 /**
  * @swagger
@@ -72,7 +76,7 @@ router.get('/:id', validate({ params: schemas.IDSchema }), controller.get);
 router.put(
   '/:id',
   validate({ params: schemas.IDSchema, body: schemas.resolutionSchema }),
-  controller.set,
+  resolutionController.set,
 );
 
 /**
@@ -101,7 +105,7 @@ router.put(
 router.delete(
   '/:id',
   validate({ params: schemas.IDSchema }),
-  controller.delete,
+  resolutionController.delete,
 );
 
 module.exports = router;

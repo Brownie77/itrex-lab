@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const controller = require('./init');
+const queueController = require('./init');
 const schemas = require('./validationSchemas');
 const validate = require('../../middleware/validate');
 
@@ -23,7 +23,7 @@ const router = Router();
  *        description: Unexpected server error
  */
 
-router.get('/first', controller.first);
+router.get('/first', queueController.first);
 
 /**
  * @swagger
@@ -54,7 +54,7 @@ router.get('/first', controller.first);
 router.post(
   '/',
   validate({ body: schemas.patientSchema }),
-  controller.addNewPatient,
+  queueController.addNewPatient,
 );
 
 /**
@@ -75,7 +75,7 @@ router.post(
  *        description: Unexpected server error
  */
 
-router.get('/next', controller.next);
+router.get('/next', queueController.next);
 
 module.exports = router;
 

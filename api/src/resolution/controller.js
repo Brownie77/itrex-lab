@@ -1,6 +1,6 @@
 const { ok, created } = require('../statuses');
 
-module.exports = class Controller {
+module.exports = class ResolutionController {
   constructor(Service) {
     this.service = Service;
   }
