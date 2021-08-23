@@ -3,6 +3,10 @@ const {
 } = require('../../errors/customDatabaseErrs');
 
 module.exports = class Database {
+  constructor() {
+    this.client = this;
+  }
+
   allocateArray(name) {
     if (this[name]) {
       throw new DatabaseAlreadyExistsError(

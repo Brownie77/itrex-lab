@@ -1,4 +1,4 @@
-const { ok, created } = require('../statuses');
+const status = require('../statuses');
 
 module.exports = class ResolutionController {
   constructor(Service) {
@@ -12,7 +12,7 @@ module.exports = class ResolutionController {
       const found = await this.service.getByKey(data);
 
       delete found.ttl;
-      return res.status(ok).send(found);
+      return res.status(status.OK).send(found);
     } catch (error) {
       return next(error);
     }
@@ -28,7 +28,7 @@ module.exports = class ResolutionController {
 
       await this.service.set(data);
 
-      return res.status(created).send();
+      return res.status(status.CREATED).send();
     } catch (error) {
       return next(error);
     }
@@ -42,7 +42,7 @@ module.exports = class ResolutionController {
 
       await this.service.delete(data);
 
-      return res.status(ok).send();
+      return res.status(status.OK).send();
     } catch (error) {
       return next(error);
     }

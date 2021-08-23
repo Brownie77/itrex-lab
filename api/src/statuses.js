@@ -1,6 +1,8 @@
-module.exports.conflict = 409;
-module.exports.badrequest = 400;
-module.exports.notfound = 404;
-module.exports.servererr = 500;
-module.exports.ok = 200;
-module.exports.created = 201;
+module.exports = {
+  CONFLICT: 409,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  SERVER_ERROR: 500,
+  OK: 200,
+  CREATED: 201,
+};

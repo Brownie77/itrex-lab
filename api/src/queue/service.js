@@ -1,3 +1,4 @@
+const { randomUUID } = require('crypto');
 const errorMessages = require('../errorMsgs');
 const { DataConfilctError } = require('../../errors/customDataErrs');
 
@@ -20,11 +21,13 @@ module.exports = class Service {
   }
 
   async enqueue(patient) {
+    const registeredPatient = { ...patient };
     const exist = await this.storage.exist(patient);
     if (exist) {
       throw new DataConfilctError(errorMessages.conflict);
     } else {
-      await this.storage.insert(patient);
+      registeredPatient.id = randomUUID();
+      return this.storage.insert(registeredPatient);
     }
   }
 };

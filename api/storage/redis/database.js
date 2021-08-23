@@ -5,9 +5,7 @@ const host = process.env.DATABASE_HOST;
 
 module.exports = class Database {
   constructor() {
-    this.client = process.env.REDIS_URL
-      ? redis.createClient(process.env.REDIS_URL)
-      : redis.createClient(port, host);
+    this.client = redis.createClient(process.env.REDIS_URL || port);
     this.client.on('connect', () => {
       console.log(
         `Connected to redis server on ${
