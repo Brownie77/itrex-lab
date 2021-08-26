@@ -11,9 +11,6 @@ export default class ResolutionController {
     //TODO: fix error messages
 
     document
-      .getElementById('add-to-queue-btn')
-      ?.addEventListener('click', this.handleNewPatient.bind(this));
-    document
       .getElementById('resolution-add-btn')
       ?.addEventListener('click', this.handleAddResolution.bind(this));
     document
@@ -25,15 +22,6 @@ export default class ResolutionController {
     document
       .getElementById('resolution-delete-btn')
       ?.addEventListener('click', this.handleDeleteResolution.bind(this));
-  }
-
-  async handleNewPatient() {
-    try {
-      const patient = this.view.getNameFromInput();
-      await this.model.setByName(patient, '', 0);
-    } catch (e) {
-      console.log(e.message);
-    }
   }
 
   async handleAddResolution() {

@@ -3,7 +3,7 @@ const StrategyInterface = require('../../strategyInterface');
 module.exports = class ArrayStrategy extends StrategyInterface {
   constructor(storage, name) {
     super();
-    this.storage = storage;
+    this.storage = storage.client;
     this.name = name;
     this.#create();
   }
@@ -13,7 +13,12 @@ module.exports = class ArrayStrategy extends StrategyInterface {
   }
 
   async exist(value) {
-    return this.storage[this.name].some((e) => e.name === value.name);
+    if (!value.identifier) {
+      throw new Error('Value expected to have identifier');
+    }
+    return this.storage[this.name].some(
+      (e) => e.identifier === value.identifier,
+    );
   }
 
   async delete() {
@@ -21,7 +26,17 @@ module.exports = class ArrayStrategy extends StrategyInterface {
   }
 
   async get() {
-    return this.storage[this.name][0];
+    return this.storage[this.name][0]; // first
+  }
+
+  async findByIdentifier(identifier) {
+    return this.storage[this.name].find(
+      (patient) => patient.identifier === identifier,
+    );
+  }
+
+  async findById(id) {
+    return this.storage[this.name].find((patient) => patient.id === id);
   }
 
   #create() {

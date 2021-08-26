@@ -1,9 +1,9 @@
 const StrategyInterface = require('../../strategyInterface');
 
-module.exports = class ArrayStrategy extends StrategyInterface {
+module.exports = class MapStrategy extends StrategyInterface {
   constructor(storage, name) {
     super();
-    this.storage = storage;
+    this.storage = storage.client;
     this.name = name;
     this.#create();
   }
@@ -12,8 +12,8 @@ module.exports = class ArrayStrategy extends StrategyInterface {
     return this.storage[this.name].set(key, value);
   }
 
-  async exist(value) {
-    return this.storage[this.name].has(value);
+  async exist(key) {
+    return this.storage[this.name].has(key);
   }
 
   async delete(key) {

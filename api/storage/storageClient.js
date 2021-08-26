@@ -1,14 +1,15 @@
-const MapStrategy = require(`./${process.env.DATABASE_TYPE}/strategies/map`);
-const ArrayStrategy = require(`./${process.env.DATABASE_TYPE}/strategies/array`);
 const errs = require('../src/errorMsgs');
 const { DatabaseUnknownTypeError } = require('../errors/customDatabaseErrs');
 const typesEnum = require('./storageTypes');
 
 module.exports = class StorageClient {
-  constructor(Database, DBname, type) {
-    this.storage = Database.client;
+  constructor(Database, DBname, type, MapStrategy, ArrayStrategy) {
+    this.storage = Database;
     this.name = DBname;
     this.type = type;
+
+    console.log(`${this.name} uses ${Database.DBtype} storage`);
+
     switch (this.type) {
       case typesEnum.MAP:
         this.strategy = new MapStrategy(this.storage, this.name);
@@ -35,5 +36,15 @@ module.exports = class StorageClient {
 
   async get(key) {
     return this.strategy.get(key);
+  }
+
+  // Optional
+
+  async findByIdentifier(identifier) {
+    return this.strategy.findByIdentifier(identifier);
+  }
+
+  async findById(id) {
+    return this.strategy.findById(id);
   }
 };

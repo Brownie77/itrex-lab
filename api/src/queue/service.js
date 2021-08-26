@@ -1,10 +1,9 @@
-const { randomUUID } = require('crypto');
-const errorMessages = require('../errorMsgs');
-const { DataConfilctError } = require('../../errors/customDataErrs');
+const Patient = require('../../models/patient');
 
-module.exports = class Service {
-  constructor(StorageClient) {
-    this.storage = StorageClient;
+module.exports = class QueueService {
+  constructor(QueueStorageClient, PatientsStorageClient) {
+    this.queueStorage = QueueStorageClient;
+    this.patients = PatientsStorageClient;
   }
 
   async getNext() {
@@ -13,21 +12,17 @@ module.exports = class Service {
   }
 
   async #deleteFirst() {
-    return this.storage.delete();
+    return this.queueStorage.delete();
   }
 
   async getFirst() {
-    return this.storage.get();
+    const patientID = await this.queueStorage.get();
+    return this.patients.findById(patientID);
   }
 
-  async enqueue(patient) {
-    const registeredPatient = { ...patient };
-    const exist = await this.storage.exist(patient);
-    if (exist) {
-      throw new DataConfilctError(errorMessages.conflict);
-    } else {
-      registeredPatient.id = randomUUID();
-      return this.storage.insert(registeredPatient);
-    }
+  async enqueue(data) {
+    const patient = new Patient(data.name);
+    this.patients.insert(patient);
+    return this.queueStorage.insert(patient.id);
   }
 };

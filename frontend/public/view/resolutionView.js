@@ -6,8 +6,12 @@ export default class ResolutionView {
     this.queueInput = document.getElementById('name');
     this.addResolutionInput = document.getElementById('resolution-text');
     this.resolutionTTL = document.getElementById('resolution-ttl');
-    this.resolutionOutputDoctor = document.getElementById('doctor-resolution-found');
-    this.resolutionOutputClient = document.getElementById('client-resolution-found');
+    this.resolutionOutputDoctor = document.getElementById(
+      'doctor-resolution-found',
+    );
+    this.resolutionOutputClient = document.getElementById(
+      'client-resolution-found',
+    );
     this.deleteResolutionBtn = document.getElementById('resolution-delete-btn');
   }
 
@@ -24,11 +28,15 @@ export default class ResolutionView {
   }
 
   getClientSearchInput() {
-    return this.resolutionSearchInputClient.value.toUpperCase();
+    return this.resolutionSearchInputClient.value
+      .replace(/#/g, '-')
+      .toUpperCase();
   }
 
   getDoctorSearchInput() {
-    return this.resolutionSearchInputDoctor.value.toUpperCase();
+    return this.resolutionSearchInputDoctor.value
+      .replace(/#/g, '-')
+      .toUpperCase();
   }
 
   getTTLAndClearInput() {
@@ -44,12 +52,7 @@ export default class ResolutionView {
   }
 
   getCurrentPatientName() {
-    return this.currentPatient.textContent.toUpperCase();
-  }
-
-  getNameFromInput() {
-    const name = this.queueInput.value;
-    return name.toUpperCase();
+    return this.currentPatient.textContent.replace(/#/g, '-').toUpperCase();
   }
 
   setDeleteButtonState(enabled) {

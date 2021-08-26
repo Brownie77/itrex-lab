@@ -7,7 +7,7 @@ export default class QueueView {
   }
 
   getCurrentlyDisplayedPatient() {
-    return this.queueDisplay.textContent.toUpperCase();
+    return this.queueDisplay.textContent.replace(/#/g, '-').toUpperCase();
   }
 
   getNameFromInputAndClearInput() {
@@ -17,7 +17,8 @@ export default class QueueView {
   }
 
   setCurrentlyDisplayedPatient(name) {
-    this.queueDisplay.textContent = name;
+    const display = name.replace(/-/g, '#');
+    this.queueDisplay.textContent = display;
     return this;
   }
 }

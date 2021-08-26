@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const resolutionController = require('./init');
+const resolutionController = require('./initController');
 const validate = require('../../middleware/validate');
 const schemas = require('./validationSchemas');
 

@@ -1,13 +1,13 @@
-const util = require('util');
+const { promisify } = require('util');
 const StrategyInterface = require('../../strategyInterface');
 
 module.exports = class ArrayStrategy extends StrategyInterface {
   constructor(storage, name) {
     super();
-    this.storage = storage;
+    this.storage = storage.client;
     this.name = name;
-    this.storage.get = util.promisify(this.storage.get);
-    this.storage.exists = util.promisify(this.storage.exists);
+    this.storage.get = promisify(this.storage.get);
+    this.storage.exists = promisify(this.storage.exists);
     this.#init();
   }
 
@@ -19,7 +19,7 @@ module.exports = class ArrayStrategy extends StrategyInterface {
 
   async exist(value) {
     const array = await this.#getArray();
-    return array.some((e) => e.name === value.name);
+    return array.some((e) => e.identifier === value.identifier);
   }
 
   async delete() {
@@ -31,6 +31,16 @@ module.exports = class ArrayStrategy extends StrategyInterface {
   async get() {
     const array = await this.#getArray();
     return array[0];
+  }
+
+  async findByIdentifier(identifier) {
+    const array = await this.#getArray();
+    return array.find((patient) => patient.identifier === identifier);
+  }
+
+  async findById(id) {
+    const array = await this.#getArray();
+    return array.find((patient) => patient.id === id);
   }
 
   async #getArray() {

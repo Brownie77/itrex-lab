@@ -1,31 +1,34 @@
 const errorMsgs = require('../errorMsgs');
 const TimeHelper = require('../../utils/timeHelper');
 const { DataNotFoundError } = require('../../errors/customDataErrs');
+const Resolution = require('../../models/resolution');
 
 module.exports = class ResolutionService {
-  constructor(StorageClient) {
-    this.storage = StorageClient;
+  constructor(ResolutionStorageClient, PatientStorageClient) {
+    this.resolutionStorage = ResolutionStorageClient;
+    this.patients = PatientStorageClient;
     this.timeHelper = new TimeHelper();
     this.ttl_default = process.env.TTL_DEF;
-    this.nullified = { resolution: null, ttl: null };
   }
 
-  async set({ id: key, ...value }) {
-    const updatedValue = Object.assign(value);
-    updatedValue.ttl = this.#setTTL(value.ttl);
-    await this.storage.insert(key, updatedValue);
+  async set(data) {
+    const { id: identifier } = data;
+    const ttl = this.#setTTL(data.ttl);
+    const patient = await this.patients.findByIdentifier(identifier);
+    const resolution = new Resolution(patient, data.resolution, ttl);
+    return this.resolutionStorage.insert(patient.id, resolution);
   }
 
-  async getByKey({ id: key }) {
-    const exist = await this.storage.exist(key);
+  async getByKey({ id: identifier }) {
+    const { id } = await this.patients.findByIdentifier(identifier);
+    const exist = await this.resolutionStorage.exist(id);
     if (!exist) {
       throw new DataNotFoundError(errorMsgs.notfound);
     }
-    const result = await this.storage.get(key);
-
+    const result = await this.resolutionStorage.get(id);
     if (this.#isOutdated(result.ttl)) {
-      this.#reset(key);
-      return this.nullified;
+      await this.#reset(identifier);
+      return null;
     }
     return result;
   }
@@ -43,14 +46,15 @@ module.exports = class ResolutionService {
   }
 
   async #reset(key) {
-    const exist = await this.storage.exist(key);
+    const { id } = await this.patients.findByIdentifier(key);
+    const exist = await this.resolutionStorage.exist(id);
     if (!exist) {
       throw new DataNotFoundError(errorMsgs.notfound);
     }
-    await this.storage.insert(key, this.nullified);
+    return this.resolutionStorage.delete(id);
   }
 
-  delete({ id }) {
-    this.#reset(id);
+  async delete({ id }) {
+    return this.#reset(id);
   }
 };

@@ -1,15 +1,18 @@
 const redis = require('redis');
 
-const port = process.env.DATABASE_PORT;
-const host = process.env.DATABASE_HOST;
+const PORT = process.env.REDIS_PORT;
+const HOST = process.env.REDIS_HOST;
 
-module.exports = class Database {
+module.exports = new (class Database {
   constructor() {
-    this.client = redis.createClient(process.env.REDIS_URL || port);
+    this.DBtype = 'redis';
+    this.client = redis.createClient(
+      process.env.REDIS_URL || { port: PORT, host: HOST },
+    );
     this.client.on('connect', () => {
       console.log(
         `Connected to redis server on ${
-          process.env.REDIS_URL || `${host}:${port}`
+          process.env.REDIS_URL || `localhost:${PORT}`
         }`,
       );
     });
@@ -17,10 +20,10 @@ module.exports = class Database {
       console.log(error);
       console.log(
         `A critical error occured while connecting to redis server on ${
-          process.env.REDIS_URL || `${host}:${port}`
+          process.env.REDIS_URL || `localhost:${PORT}`
         }, the server is shutting down...`,
       );
       process.exit(1);
     });
   }
-};
+})();

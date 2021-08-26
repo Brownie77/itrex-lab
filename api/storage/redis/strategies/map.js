@@ -1,12 +1,12 @@
-const util = require('util');
+const { promisify } = require('util');
 const StrategyInterface = require('../../strategyInterface');
 
-module.exports = class ArrayStrategy extends StrategyInterface {
+module.exports = class MapStrategy extends StrategyInterface {
   constructor(storage, name) {
     super();
-    this.storage = storage;
+    this.storage = storage.client;
     this.name = name;
-    this.storage.get = util.promisify(this.storage.get);
+    this.storage.get = promisify(this.storage.get);
   }
 
   async insert(key, value) {
@@ -18,7 +18,7 @@ module.exports = class ArrayStrategy extends StrategyInterface {
   }
 
   async delete(key) {
-    return this.client.del(key);
+    return this.storage.del(key);
   }
 
   async get(key) {
