@@ -8,51 +8,109 @@ describe('test StorageClient', () => {
   let sc = null;
   const db = DB;
 
-  test('should add to array, return the first element and delete the first element', async () => {
-    sc = new SC(db, 'testArray', types.ARRAY, MapStrategy, ArrayStrategy);
+  it('should add to array', async () => {
+    sc = new SC(db, 'testArray1', types.ARRAY, MapStrategy, ArrayStrategy);
     const spyInsert = jest.spyOn(sc, 'insert');
+    const one = { identifier: 1 };
+    await sc.insert(one);
+    expect(sc.storage.testArray1[0]).toStrictEqual(one);
+    expect(spyInsert).toHaveBeenLastCalledWith(one);
+    expect(spyInsert).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return first from array', async () => {
+    sc = new SC(db, 'testArray2', types.ARRAY, MapStrategy, ArrayStrategy);
     const spyGet = jest.spyOn(sc, 'get');
+    const one = { identifier: 1 };
+    const two = { identifier: 2 };
+    await sc.insert(one);
+    await sc.insert(two);
+    const res = await sc.get();
+    expect(res).toStrictEqual(one);
+    expect(spyGet).toHaveBeenCalledTimes(1);
+  });
+
+  it('should delete first from array', async () => {
+    sc = new SC(db, 'testArray3', types.ARRAY, MapStrategy, ArrayStrategy);
     const spyDelete = jest.spyOn(sc, 'delete');
     const one = { identifier: 1 };
     const two = { identifier: 2 };
     await sc.insert(one);
-    const value = await sc.get();
-
-    expect(spyInsert).toHaveBeenLastCalledWith(one);
-    expect(spyInsert).toHaveBeenCalledTimes(1);
-    expect(spyGet).toHaveBeenLastCalledWith();
-    expect(spyGet).toHaveBeenCalledTimes(1);
-    expect(value).toBe(one);
     await sc.insert(two);
-    expect(sc.exist(one)).toBeTruthy();
-    expect(await sc.get()).toBe(one);
-    await sc.delete(); // delete one
-    expect(await sc.exist(one)).toBeFalsy();
-    expect(spyDelete).toHaveBeenLastCalledWith();
+    let res = await sc.get();
+    expect(res).toStrictEqual(one);
+
+    await sc.delete();
     expect(spyDelete).toHaveBeenCalledTimes(1);
-    expect(await sc.get()).toBe(two);
+
+    res = await sc.get();
+    expect(res).toStrictEqual(two);
   });
 
-  test('should add to map, return by key and reset value by key', async () => {
-    sc = new SC(db, 'testMap', types.MAP, MapStrategy, ArrayStrategy);
+  it('should tell if object exists in array', async () => {
+    sc = new SC(db, 'testArray4', types.ARRAY, MapStrategy, ArrayStrategy);
+    const spyExist = jest.spyOn(sc, 'exist');
+    const one = { identifier: 1 };
+    const two = { identifier: 2 };
+    await sc.insert(one);
+    await sc.insert(two);
+    expect(await sc.exist(one)).toBeTruthy();
+    await sc.delete();
+    expect(spyExist).toHaveBeenCalledTimes(1);
+    expect(await sc.exist(one)).toBeFalsy();
+  });
+
+  it('should add to map', async () => {
+    sc = new SC(db, 'testMap1', types.MAP, MapStrategy, ArrayStrategy);
     const one = { identifier: 1 };
     const valueOne = { val: 'one' };
-    const two = { identifier: 2 };
-    const valueTwo = { val: 'two' };
-
     await sc.insert(one, valueOne);
-    const val = await sc.get(one);
-    expect(val).toStrictEqual(valueOne);
-    await sc.insert(two, valueTwo);
-    let val2 = await sc.get(two);
-    expect(val2).toStrictEqual(valueTwo);
-    await sc.insert(two, valueOne);
-    val2 = await sc.get(two);
-    expect(val2).toStrictEqual(valueOne);
-    await sc.delete(two);
-    val2 = await sc.get(two);
-    expect(val2).toStrictEqual({});
-    expect(await sc.exist(two)).toBeTruthy();
-    expect(await sc.exist({ identifier: 'asd' })).toBeFalsy();
+    expect(sc.storage.testMap1.get(one)).toStrictEqual(valueOne);
+  });
+
+  it('should return by key', async () => {
+    sc = new SC(db, 'testMap2', types.MAP, MapStrategy, ArrayStrategy);
+    const one = { identifier: 1 };
+    const valueOne = { val: 'one' };
+    await sc.insert(one, valueOne);
+    const res = await sc.get(one);
+    expect(res).toStrictEqual(valueOne);
+  });
+
+  it('should delete by key', async () => {
+    sc = new SC(db, 'testMap2', types.MAP, MapStrategy, ArrayStrategy);
+    const one = { identifier: 1 };
+    const valueOne = { val: 'one' };
+    await sc.insert(one, valueOne);
+    let res = await sc.get(one);
+    expect(res).toStrictEqual(valueOne);
+    await sc.delete(one);
+    res = await sc.get(one);
+    expect(res).toStrictEqual({});
+  });
+
+  it('should reset by key', async () => {
+    sc = new SC(db, 'testMap2', types.MAP, MapStrategy, ArrayStrategy);
+    const one = { identifier: 1 };
+    const valueOne = { val: 'one' };
+    const valueTwo = { val: 'two' };
+    await sc.insert(one, valueOne);
+    let res = await sc.get(one);
+    expect(res).toStrictEqual(valueOne);
+    await sc.insert(one, valueTwo);
+    res = await sc.get(one);
+    expect(res).toStrictEqual(valueTwo);
+  });
+
+  it('should tell if given key exists', async () => {
+    sc = new SC(db, 'testMap2', types.MAP, MapStrategy, ArrayStrategy);
+    const one = { identifier: 1 };
+    const valueOne = { val: 'one' };
+    await sc.insert(one, valueOne);
+    let exist = await sc.exist(one);
+    expect(exist).toBeTruthy();
+    await sc.delete(one);
+    exist = await sc.exist(one);
+    expect(exist).toBeFalsy();
   });
 });

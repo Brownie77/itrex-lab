@@ -23,3 +23,13 @@ docker-compose down
 ## Documentation
 
 To get the information on how to access REST API routes documentation, check out the Readme file in the api directory.
+
+## Unit tests
+
+Navigate to the api directory and run:
+
+```bash
+npm test
+```
+
+Some of the tests will need some time to finish. ETA: 3 minutes;

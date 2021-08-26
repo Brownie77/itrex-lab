@@ -28,7 +28,6 @@ module.exports = new (class Database {
     this.resolution = this.client.define('Resolutions', resolutionModel);
     this.patient.hasMany(this.resolution, {
       onDelete: 'CASCADE',
-      onUpdate: 'NO ACTION',
     });
     this.resolution.belongsTo(this.patient);
     this.patient.sync().catch((err) => console.log(err));

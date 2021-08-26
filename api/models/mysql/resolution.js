@@ -5,7 +5,6 @@ const Resolution = {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
-    allowNull: false,
   },
   resolution: {
     type: Sequelize.STRING,

@@ -30,13 +30,15 @@ module.exports = class ArrayStrategy extends StrategyInterface {
   }
 
   async findByIdentifier(identifier) {
-    return this.storage[this.name].find(
-      (patient) => patient.identifier === identifier,
-    );
+    return {
+      ...this.storage[this.name].find(
+        (patient) => patient.identifier === identifier,
+      ),
+    };
   }
 
   async findById(id) {
-    return this.storage[this.name].find((patient) => patient.id === id);
+    return { ...this.storage[this.name].find((patient) => patient.id === id) };
   }
 
   #create() {

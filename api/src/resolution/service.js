@@ -20,15 +20,19 @@ module.exports = class ResolutionService {
   }
 
   async getByKey({ id: identifier }) {
-    const { id } = await this.patients.findByIdentifier(identifier);
+    const data = await this.patients.findByIdentifier(identifier);
+    if (!data?.id) {
+      throw new DataNotFoundError(errorMsgs.notfound); // no patient found
+    }
+    const { id } = data;
     const exist = await this.resolutionStorage.exist(id);
     if (!exist) {
-      throw new DataNotFoundError(errorMsgs.notfound);
+      return {}; // no resolution
     }
     const result = await this.resolutionStorage.get(id);
     if (this.#isOutdated(result.ttl)) {
       await this.#reset(identifier);
-      return null;
+      return {};
     }
     return result;
   }

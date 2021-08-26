@@ -17,7 +17,7 @@ module.exports = class MapStrategy extends StrategyInterface {
   }
 
   async delete(key) {
-    return this.storage[this.name].set(key, null);
+    return this.storage[this.name].delete(key);
   }
 
   async get(key) {
