@@ -1,0 +1,61 @@
+#display-queue > * {
+  margin: 0.4rem 0 1rem 0;
+}
+
+#process {
+  margin-top: 13%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  float: right;
+}
+
+#process > button {
+  margin-right: 0.3rem;
+  width: 15rem;
+  border-radius: 8px;
+}
+
+#process > label {
+  font-size: 12px;
+}
+
+#resolution > textarea,
+#resolution-search > textarea {
+  resize: none;
+}
+
+#resolution > textarea:focus,
+#resolution-search > textarea:focus {
+  box-shadow: none !important;
+}
+
+#resolution > button,
+#resolution-search > button {
+  float: right;
+  margin: 0.3rem;
+  width: 15rem;
+  border-radius: 8px;
+}
+
+#search-resolution-form {
+  margin-top: 3rem;
+}
+
+#search-resolution-doctor {
+  background-color: rgba(25, 135, 84, 1);
+  color: white;
+  margin-bottom: 0.3rem;
+  width: 15rem;
+  border-radius: 8px;
+}
+
+#search-resolution-doctor:hover {
+  background-color: rgba(25, 135, 84, 0.6);
+}
+
+.ttl {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 0.3rem;
+}

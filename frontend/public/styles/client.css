@@ -1,0 +1,45 @@
+#display-queue > * {
+  margin: 2rem 0;
+}
+
+#client-enqueue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#add-to-queue-form {
+  display: flex;
+}
+
+#add-to-queue-form > input {
+  height: 38px;
+}
+
+#use-default-TTL-check:focus {
+  box-shadow: none !important;
+}
+
+#add-to-queue-btn {
+  float: right;
+  margin-left: 0.3rem;
+  border-radius: 8px;
+}
+
+#resolution-search-form {
+  display: flex;
+}
+
+#search-resolution-client {
+  margin-left: 0.3rem;
+  background-color: rgba(25, 135, 84, 1);
+  color: white;
+}
+
+#search-resolution-client:hover {
+  background-color: rgba(25, 135, 84, 0.6);
+}
+
+#client-resolution-found {
+  resize: none;
+}
