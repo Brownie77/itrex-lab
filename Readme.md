@@ -1,4 +1,4 @@
-# Application
+# Docker
 
 To start the application, go to the api directory, set configuration you need in <b>.env</b> file, go back to the root directory and run:
 
@@ -34,9 +34,23 @@ docker-compose down
 
 ## Documentation
 
-To get the information on how to access REST API routes documentation, check out the Readme file in the api directory.
+The documentation for the API routes was made using [Swagger](https://swagger.io/tools/swagger-ui/).
 
-## Unit tests
+To access the documentation, navigate to the api folder and install all the dependencies.
+
+```bash
+npm install
+```
+
+Then start the server.
+
+```bash
+npm start
+```
+
+And navigate to [http://localhost:8080/api-docs/](http://localhost:8080/api-docs/).
+
+## Unit testing
 
 Navigate to the api directory and run:
 
@@ -44,4 +58,4 @@ Navigate to the api directory and run:
 npm test
 ```
 
-Some of the tests will need some time to finish. <b>ETA: 3 minutes</b>;
+Some of the tests will need some time to finish. <b>ETA: 2 minutes</b>;

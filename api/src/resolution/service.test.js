@@ -1,12 +1,7 @@
 // testing mysql
-const SequelizeMock = require('sequelize-mock');
+const MySQLMock = require('../../mocks/mysql');
 const MapStrategyMysql = require('../../storage/mysql/strategies/map');
 const ArrayStrategyMysql = require('../../storage/mysql/strategies/array');
-const resolutionModel = require('../../models/mysql/resolution');
-const patientModel = require('../../models/mysql/patient');
-
-jest.mock('../../storage/mysql/strategies/map');
-jest.mock('../../storage/mysql/strategies/array');
 
 // testing inmemory
 const DB = require('../../storage/inmemory/database');
@@ -25,15 +20,16 @@ const TimeHelper = require('../../utils/timeHelper');
 const Patient = require('../../models/patient');
 const errorText = require('../errorMsgs');
 
+const timeHelper = new TimeHelper();
+
+const min = timeHelper.minToMs(1);
+
 describe('test Resolution Service with inmemory storing', () => {
   const db = DB;
 
   let serv = null;
   let storageClient = null;
   let patients = null;
-  const timeHelper = new TimeHelper();
-
-  const min = timeHelper.minToMs(1);
 
   let counter = 0;
 
@@ -123,16 +119,13 @@ describe('test Resolution Service with inmemory storing', () => {
   });
 });
 
-// same tests, different storage type
+// same tests for redis storage type
 describe('test Resolution Service with redis storing', () => {
   const db = RedisMock;
 
   let serv = null;
   let storageClient = null;
   let patients = null;
-  const timeHelper = new TimeHelper();
-
-  const min = timeHelper.minToMs(1);
 
   let counter = 0;
 
@@ -225,20 +218,59 @@ describe('test Resolution Service with redis storing', () => {
   });
 });
 
-// describe('test Resolution Service with mysql storing', async () => {
-//   const DBConnectionMock = new SequelizeMock();
-//   const PatientsMock = DBConnectionMock.define('Patients', patientModel);
-//   const ResolutionsMock = DBConnectionMock.define(
-//     'Resolutions',
-//     resolutionModel,
-//   );
-//   PatientsMock.hasMany(ResolutionsMock);
-//   ResolutionsMock.belongsTo(PatientsMock);
+describe('test Resolution Service with mysql storing', () => {
+  const db = MySQLMock;
 
-//   jest
-//     .spyOn(MapStrategyMysql, 'model')
-//     .mockImplementation(() => ResolutionsMock);
-//   jest
-//     .spyOn(ArrayStrategyMysql, 'model')
-//     .mockImplementation(() => PatientsMock);
-// });
+  let serv = null;
+  let storageClient = null;
+  let patients = null;
+
+  let counter = 0;
+
+  beforeEach(() => {
+    counter += 1;
+    storageClient = new StorageClient(
+      db,
+      `${counter}-testresolutions`,
+      types.MAP,
+      MapStrategyMysql,
+      ArrayStrategyMysql,
+    );
+    patients = new StorageClient(
+      db,
+      `${counter}-testpatients`,
+      types.ARRAY,
+      MapStrategyMysql,
+      ArrayStrategyMysql,
+    );
+    serv = new Serv(storageClient, patients);
+  });
+
+  it('should set the resolution by key and return resolution by key', async () => {
+    const patient = new Patient('Dima');
+    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
+    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
+    await serv.set(data);
+    const val = await serv.getByKey(data);
+    expect(val.resolution).toBeDefined();
+    expect(val.PatientId).toEqual(expect.any(String));
+    expect(val.ttl).toBeDefined();
+  });
+
+  it('should delete the resolution', async () => {
+    const patient = new Patient('Dima');
+    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
+    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
+    await serv.set(data);
+    let val = await serv.getByKey(data);
+    expect(val.resolution).toBeDefined();
+    expect(val.PatientId).toEqual(expect.any(String));
+    expect(val.ttl).toBeDefined();
+    await serv.delete(data);
+    try {
+      val = await serv.getByKey(data);
+    } catch (err) {
+      expect(err.message).toEqual(errorText.notfound);
+    }
+  });
+});
