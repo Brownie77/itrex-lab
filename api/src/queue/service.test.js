@@ -13,9 +13,9 @@ describe('test queue service', () => {
   );
 
   it('should add patient id to the queue', async () => {
-    const data1 = { identifier: 'Dima' };
-    const data2 = { identifier: 'Jack' };
-    const data3 = { identifier: 'John' };
+    const data1 = { name: 'Dima' };
+    const data2 = { name: 'Jack' };
+    const data3 = { name: 'John' };
 
     await service.enqueue(data1);
     await service.enqueue(data2);
@@ -27,7 +27,7 @@ describe('test queue service', () => {
     expect(first.id).toBeDefined();
 
     const patient = await service.patientsService.findOne({
-      where: { identifier: 'Dima' },
+      where: { name: 'Dima' },
     });
     expect(first.id).toBe(patient.id);
   });
@@ -37,7 +37,7 @@ describe('test queue service', () => {
     expect(next.id).toBeDefined();
 
     const patient = await service.patientsService.findOne({
-      where: { identifier: 'Jack' },
+      where: { name: 'Jack' },
     });
     expect(next.id).toBe(patient.id);
 
@@ -46,7 +46,7 @@ describe('test queue service', () => {
   });
 
   it('should add the same person to the queue with no errors', async () => {
-    const data1 = { identifier: 'Dima' };
+    const data1 = { name: 'Dima' };
 
     await service.enqueue(data1);
     await service.enqueue(data1);

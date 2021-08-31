@@ -1,5 +1,3 @@
-const { randomUUID } = require('crypto');
-
 module.exports = class PatientsService {
   constructor(Storage) {
     this.storage = Storage;
@@ -8,19 +6,19 @@ module.exports = class PatientsService {
   async getId(data) {
     const person = await this.findOne({ where: data });
 
-    if (!!person) {
+    if (person) {
       return { id: person.id };
     }
 
     return null;
   }
 
-  async create(data) {
+  async createPatient(data) {
     const patient = { ...data };
-    patient.id = randomUUID();
+    delete patient.password;
+    delete patient.email;
 
-    await this.storage.save(patient);
-    return { id: patient.id };
+    return this.storage.save(patient);
   }
 
   async findOne(query) {

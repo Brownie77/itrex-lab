@@ -11,12 +11,12 @@ export default class QueueModel {
   getFirst() {
     return axios
       .get('http://localhost:8080/api/v1/queue')
-      .then((res) => res.data.identifier);
+      .then((res) => res.data.name);
   }
 
   getNext() {
     return axios
       .get('http://localhost:8080/api/v1/queue/next')
-      .then((res) => res.data.identifier);
+      .then((res) => res.data.name);
   }
 }

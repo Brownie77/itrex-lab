@@ -1,23 +1,15 @@
-const { Strategy } = require('./currentStrategy');
-
 module.exports = class PatientsStorageClient {
   constructor(database) {
-    this.storageName = 'Patients';
-    this.strategy = new Strategy(database, this.storageName);
-    console.log(`Patients Service uses ${database.type} storage`);
+    this.db = database.db;
+    this.model = database.patient;
   }
 
   async save(patient) {
-    return this.strategy.save(patient);
+    return this.model.create(patient);
   }
 
-  /**
-   *
-   * query example : { where: { id: 1, name: 'John'} } || { where: { name: 'John'} }
-   *
-   */
-
   async findOne(query) {
-    return this.strategy.findOne(query);
+    const data = await this.model.findOne(query);
+    return data?.dataValues;
   }
 };

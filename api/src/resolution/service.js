@@ -11,10 +11,10 @@ module.exports = class ResolutionsService {
 
   async set(data) {
     const payload = { ...data };
-    delete payload.identifier;
+    delete payload.name;
 
     const { id } = await this.patientsService.getId({
-      identifier: data.identifier,
+      name: data.name,
     });
 
     const validThru = payload.ttl || process.env.TTL_DEF;
@@ -26,7 +26,7 @@ module.exports = class ResolutionsService {
 
   async get(data) {
     const patient = await this.patientsService.getId({
-      identifier: data.identifier,
+      name: data.name,
     });
 
     if (!patient) {
@@ -47,7 +47,7 @@ module.exports = class ResolutionsService {
 
   async delete(data) {
     const { id } = await this.patientsService.getId({
-      identifier: data.identifier,
+      name: data.name,
     });
 
     return this.storage.deleteOne({ where: { id } });

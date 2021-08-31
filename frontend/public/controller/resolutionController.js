@@ -35,7 +35,7 @@ export default class ResolutionController {
         throw new Error('TTL has to be a number');
       }
       const patient = this.view.getCurrentPatientName();
-      if (patient !== this.EmptyQueueMsg.toUpperCase()) {
+      if (patient !== this.EmptyQueueMsg) {
         await this.model.setByName(patient, resolution, ttl);
       }
     } catch (e) {

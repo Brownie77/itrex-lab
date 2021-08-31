@@ -21,6 +21,13 @@ class DataNotFoundError extends GlobalDataError {
   }
 }
 
+class DataForbiddenError extends GlobalDataError {
+  constructor(message) {
+    super(message);
+    this.name = 'DataForbiddenError';
+  }
+}
 
 module.exports.DataConflictError = DataConflictError;
 module.exports.DataNotFoundError = DataNotFoundError;
+module.exports.DataForbiddenError = DataForbiddenError;

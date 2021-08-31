@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="styles/common.css" />
     <link rel="stylesheet" href="styles/client.css" />
-    <title>Doctor's queue</title>
+    <title>Cabinet</title>
   </head>
   <body>
     <div class="context">
@@ -28,8 +28,8 @@
           </div>
           <div class="col">
             <form action="/auth/sign_in">
-              <button type="submit" class="btn btn-primary btn-wide">
-                Sign in
+              <button type="submit" class="btn btn-danger btn-wide">
+                Sign out
               </button>
             </form>
           </div>
@@ -39,8 +39,8 @@
       <div class="container" id="queue">
         <div class="row">
           <div class="col" id="display-queue">
-            <h2>The queue</h2>
-            <span>Current patient:</span>
+            <h2>Set up an appointment</h2>
+            <span>Queue length:</span>
             <h1 id="placeholder">&lt;empty&gt;</h1>
           </div>
           <div class="col" id="client-enqueue">
@@ -127,6 +127,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script type="module" src="index.js"></script>
+    <script type="module" src="/index.js"></script>
   </body>
 </html>

@@ -27,10 +27,7 @@ export default class QueueController {
 
   async handleProcessCurrentPatient() {
     try {
-      if (
-        this.view.getCurrentlyDisplayedPatient() !==
-        this.EmptyQueueMsg.toUpperCase()
-      ) {
+      if (this.view.getCurrentlyDisplayedPatient() !== this.EmptyQueueMsg) {
         const newPatient = (await this.model.getNext()) || this.EmptyQueueMsg;
         this.view.setCurrentlyDisplayedPatient(newPatient);
       }

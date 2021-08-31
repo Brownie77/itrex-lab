@@ -32,7 +32,6 @@ module.exports = class QueueController {
           {
             where: 'body',
             what: 'name',
-            as: 'identifier',
             do: ['capitalize'],
           },
         ],

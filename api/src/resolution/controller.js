@@ -15,7 +15,7 @@ module.exports = class ResolutionController {
           {
             where: 'params',
             what: 'patientId',
-            as: 'identifier', // save as
+            as: 'name', // save as
           },
         ],
       };
@@ -37,7 +37,7 @@ module.exports = class ResolutionController {
           {
             where: 'params',
             what: 'patientId',
-            as: 'identifier',
+            as: 'name',
             do: ['capitalize'],
           },
           {
@@ -68,7 +68,7 @@ module.exports = class ResolutionController {
           {
             where: 'params',
             what: 'patientId',
-            as: 'identifier',
+            as: 'name',
             do: ['capitalize'],
           },
         ],

@@ -1,27 +1,30 @@
-const { Strategy } = require('./currentStrategy');
-
 module.exports = class ResolutionsStorageClient {
-  constructor(database) {
-    this.storageName = 'Resolutions';
-    this.strategy = new Strategy(database, this.storageName);
-    console.log(`Resolutions Service uses ${database.type} storage`);
+  constructor(database, name) {
+    this.name = name;
+    this.db = database.db;
+    this.model = database.resolution;
   }
 
-  async save(key, value) {
-    return this.strategy.save(key, value);
+  async save({ id: patientId }, { resolution, ttl }) {
+    const exist = await this.getOne({ where: { id: patientId } });
+    if (Object.keys(exist).length === 0) {
+      return this.model.create({ resolution, ttl, patientId });
+    }
+    return this.model.update({ resolution, ttl }, { where: { patientId } });
   }
-
-  /**
-   *
-   * query example : { where: { id: 1, name: 'John'} } || { where: { name: 'John'} }
-   *
-   */
 
   async getOne(query) {
-    return this.strategy.getOne(query);
+    const data = await this.model.findAll({
+      where: { patientId: query.where.id },
+    });
+
+    if (!data[0]) {
+      return {};
+    }
+    return data[0].dataValues;
   }
 
   async deleteOne(query) {
-    return this.strategy.deleteOne(query);
+    this.model.destroy({ where: { patientId: query.where.id } });
   }
 };

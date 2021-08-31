@@ -28,15 +28,11 @@ export default class ResolutionView {
   }
 
   getClientSearchInput() {
-    return this.resolutionSearchInputClient.value
-      .replace(/#/g, '-')
-      .toUpperCase();
+    return this.resolutionSearchInputClient.value;
   }
 
   getDoctorSearchInput() {
-    return this.resolutionSearchInputDoctor.value
-      .replace(/#/g, '-')
-      .toUpperCase();
+    return this.resolutionSearchInputDoctor.value;
   }
 
   getTTLAndClearInput() {
@@ -52,7 +48,7 @@ export default class ResolutionView {
   }
 
   getCurrentPatientName() {
-    return this.currentPatient.textContent.replace(/#/g, '-').toUpperCase();
+    return this.currentPatient.textContent;
   }
 
   setDeleteButtonState(enabled) {

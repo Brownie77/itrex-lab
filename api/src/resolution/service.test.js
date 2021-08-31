@@ -15,8 +15,8 @@ describe('test resolution service', () => {
     new PatientsService(new PatientsStorageClient(patientsDatabase)),
   );
 
-  const data1 = { identifier: 'Seth', ttl: 1, resolution: 'testing' };
-  const data2 = { identifier: 'Ronald', ttl: 100, resolution: 'yes' };
+  const data1 = { name: 'Seth', ttl: 1, resolution: 'testing' };
+  const data2 = { name: 'Ronald', ttl: 100, resolution: 'yes' };
 
   it('should set resolution', async () => {
     const spy = jest.spyOn(service, 'set');
@@ -46,7 +46,7 @@ describe('test resolution service', () => {
   });
 
   it('should override resolution if it already exists', async () => {
-    const data = { identifier: 'Seth', ttl: 1, resolution: 'testing override' };
+    const data = { name: 'Seth', ttl: 1, resolution: 'testing override' };
     let result = await service.get(data);
 
     expect(result.resolution).toBe(data1.resolution);

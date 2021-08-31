@@ -4,10 +4,19 @@ const Patient = {
   id: {
     primaryKey: true,
     type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV1,
     allowNull: false,
   },
-  identifier: {
+  name: {
     type: Sequelize.STRING,
+    allowNull: false,
+  },
+  gender: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  birthdate: {
+    type: Sequelize.DATEONLY,
     allowNull: false,
   },
 };

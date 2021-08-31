@@ -19,7 +19,7 @@
     />
     <link rel="stylesheet" href="/styles/auth.css" />
     <link rel="stylesheet" href="/styles/common.css" />
-    <title>Authorization</title>
+    <title>Sign In</title>
   </head>
   <body>
     <div class="context">
@@ -29,17 +29,18 @@
             <h3>Sign In</h3>
           </div>
           <div class="card-body">
-            <form>
+            <form action="/cabinet">
               <div class="input-group form-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text"
-                    ><i class="fas fa-user"></i
+                    ><i class="fas fa-envelope"></i
                   ></span>
                 </div>
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
-                  placeholder="username"
+                  placeholder="email"
+                  id="login-email"
                 />
               </div>
               <div class="input-group form-group">
@@ -52,6 +53,7 @@
                   type="password"
                   class="form-control"
                   placeholder="password"
+                  id="login-password"
                 />
               </div>
               <div class="form-group">
@@ -59,6 +61,7 @@
                   type="submit"
                   value="Login"
                   class="btn float-right login_btn"
+                  id="login-btn"
                 />
               </div>
             </form>
@@ -85,5 +88,12 @@
         <li></li>
       </ul>
     </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script type="module" src="/index.js"></script>
   </body>
 </html>

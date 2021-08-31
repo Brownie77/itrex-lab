@@ -13,11 +13,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.use('/auth', authRoutes);
-app.use('/queue', queueRoutes);
+app.use('/cabinet', queueRoutes);
 app.use('/doctor', doctorRoutes);
 
 app.get('/', (req, res) => {
-  res.redirect('/queue');
+  res.redirect('/auth/sign_in');
 });
 
 app.use(err404Handle);

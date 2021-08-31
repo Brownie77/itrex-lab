@@ -3,6 +3,10 @@ module.exports = (config, req) => {
   const regex = /^[a-zA-Z]+$/;
 
   config.props.map((prop) => {
+    if (typeof prop !== 'object' || prop === null) {
+      throw new Error('Props is props array have to be objects and not null.');
+    }
+
     if (!prop.what || !prop.where) {
       throw new Error('Adapt config violation.');
     }
@@ -44,6 +48,16 @@ module.exports = (config, req) => {
         }
 
         const transformed = transform(req.query[prop.what], prop.do);
+        data[name] = transformed;
+
+        break;
+      }
+      case 'cookies': {
+        if (req.cookies[prop.what] === undefined) {
+          throw new Error(`${prop.what} prop does not exist in cookies.`);
+        }
+
+        const transformed = transform(req.cookies[prop.what], prop.do);
         data[name] = transformed;
 
         break;

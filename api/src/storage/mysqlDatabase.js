@@ -1,4 +1,6 @@
 const { Sequelize } = require('sequelize');
+
+const userModel = require('./models/user');
 const patientModel = require('./models/patient');
 const resolutionModel = require('./models/resolution');
 
@@ -24,11 +26,21 @@ module.exports = new (class Database {
         console.log('Unable to connect to the MySQL database:', err);
       });
 
+    this.user = this.db.define('users', userModel);
     this.patient = this.db.define('patients', patientModel);
     this.resolution = this.db.define('resolutions', resolutionModel);
-    this.patient.hasMany(this.resolution, {
+
+    this.user.hasOne(this.patient, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
       onDelete: 'CASCADE',
-      hooks: true,
+    });
+    this.patient.belongsTo(this.user);
+
+    this.patient.hasOne(this.resolution, {
+      onDelete: 'CASCADE',
     });
     this.resolution.belongsTo(this.patient, {
       foreignKey: {
@@ -36,6 +48,8 @@ module.exports = new (class Database {
         allowNull: false,
       },
     });
+
+    this.user.sync().catch((err) => console.log(err));
     this.patient.sync().catch((err) => console.log(err));
     this.resolution.sync().catch((err) => console.log(err));
   }

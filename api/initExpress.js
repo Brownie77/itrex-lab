@@ -1,11 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
-const { queueRoutes, resolutionRoutes } = require('./src/exportRoutes');
+const {
+  queueRoutes,
+  resolutionRoutes,
+  authRoutes,
+} = require('./src/exportRoutes');
 const errorHandle = require('./middleware/errHandle');
 
 const app = express();
@@ -33,14 +38,17 @@ app.use(morgan('tiny'));
 
 app.use(
   cors({
+    credentials: true,
     origin: process.env.ALLOW_CORS_FROM,
   }),
 );
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/queue', queueRoutes);
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/patients', resolutionRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));

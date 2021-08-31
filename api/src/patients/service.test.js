@@ -9,8 +9,8 @@ describe('test patients service', () => {
   const service = new Service(new StorageClient(patientsDatabase));
 
   it('should return different uuids for different names', async () => {
-    const data1 = { identifier: 'Dima' };
-    const data2 = { identifier: 'Jack' };
+    const data1 = { name: 'Dima' };
+    const data2 = { name: 'Jack' };
 
     const { id: id1 } = await service.create(data1);
     const { id: id2 } = await service.create(data2);
@@ -21,15 +21,15 @@ describe('test patients service', () => {
   });
 
   it('should find patient according to the given query', async () => {
-    const Jack = await service.findOne({ where: { identifier: 'Jack' } });
-    const data = { identifier: 'Sam' }; // new patient
+    const Jack = await service.findOne({ where: { name: 'Jack' } });
+    const data = { name: 'Sam' }; // new patient
 
     const { id } = await service.create(data);
-    const Sam = await service.findOne({ where: { identifier: 'Sam' } });
+    const Sam = await service.findOne({ where: { name: 'Sam' } });
     expect(id).toBe(Sam.id);
-    expect(Sam.identifier).toBeDefined();
+    expect(Sam.name).toBeDefined();
 
     expect(Jack.id).not.toBe(Sam.id);
-    expect(Jack.identifier).toBeDefined();
+    expect(Jack.name).toBeDefined();
   });
 });
