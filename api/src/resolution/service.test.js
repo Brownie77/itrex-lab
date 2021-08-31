@@ -1,19 +1,19 @@
 require('dotenv').config();
 
-let database = null;
-const RESOLUTIONS_DATABASE_TYPE = process.env.RESOLUTIONS_DATABASE_TYPE;
-
-if (RESOLUTIONS_DATABASE_TYPE === 'inmemory') {
-  database = require('../storage/memoryDatabase');
-} else if (RESOLUTIONS_DATABASE_TYPE === 'redis') {
-  database = require('../storage/mocks/redis');
-} else throw new Error('Unknown or unsupported db type chosen');
-
 const Service = require('./service');
 const StorageClient = require('./storageClient');
+const {
+  resolutionsDatabase,
+  patientsDatabase,
+} = require('../storage/chooseTestDB');
+const PatientsService = require('../patients/service');
+const PatientsStorageClient = require('../patients/storageClient');
 
 describe('test resolution service', () => {
-  const service = new Service(new StorageClient(database));
+  const service = new Service(
+    new StorageClient(resolutionsDatabase),
+    new PatientsService(new PatientsStorageClient(patientsDatabase)),
+  );
 
   const data1 = { identifier: 'Seth', ttl: 1, resolution: 'testing' };
   const data2 = { identifier: 'Ronald', ttl: 100, resolution: 'yes' };

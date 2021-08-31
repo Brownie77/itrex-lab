@@ -1,19 +1,16 @@
 require('dotenv').config();
 
-let database = null;
-const QUEUE_DATABASE_TYPE = process.env.QUEUE_DATABASE_TYPE;
-
-if (QUEUE_DATABASE_TYPE === 'inmemory') {
-  database = require('../storage/memoryDatabase');
-} else if (QUEUE_DATABASE_TYPE === 'redis') {
-  database = require('../storage/mocks/redis');
-} else throw new Error('Unknown or unsupported db type chosen');
-
 const Service = require('./service');
 const StorageClient = require('./storageClient');
+const { queueDatabase, patientsDatabase } = require('../storage/chooseTestDB');
+const PatientsService = require('../patients/service');
+const PatientsStorageClient = require('../patients/storageClient');
 
 describe('test queue service', () => {
-  const service = new Service(new StorageClient(database));
+  const service = new Service(
+    new StorageClient(queueDatabase),
+    new PatientsService(new PatientsStorageClient(patientsDatabase)),
+  );
 
   it('should add patient id to the queue', async () => {
     const data1 = { identifier: 'Dima' };

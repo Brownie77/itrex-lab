@@ -1,4 +1,4 @@
-const { Strategy } = require('./currentMode');
+const { Strategy } = require('./currentStrategy');
 
 module.exports = class ResolutionsStorageClient {
   constructor(database) {

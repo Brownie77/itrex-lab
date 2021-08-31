@@ -1,7 +1,5 @@
-const PatientsService = require('../patients/initService');
-
 module.exports = class QueueService {
-  constructor(Storage) {
+  constructor(Storage, PatientsService) {
     this.storage = Storage;
     this.patientsService = PatientsService;
   }

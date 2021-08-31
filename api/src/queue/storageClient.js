@@ -1,4 +1,4 @@
-const { Strategy } = require('./currentMode');
+const { Strategy } = require('./currentStrategy');
 
 module.exports = class QueueStorageClient {
   constructor(database) {
@@ -17,9 +17,5 @@ module.exports = class QueueStorageClient {
 
   async deleteAtPosition(at) {
     return this.strategy.deleteAtPosition(at);
-  }
-
-  async has(value) {
-    return this.strategy.has(value);
   }
 };

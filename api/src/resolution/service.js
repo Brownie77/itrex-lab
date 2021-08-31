@@ -1,10 +1,9 @@
-const PatientsService = require('../patients/initService');
 const TimeHelper = require('../../utils/timeHelper');
 const { DataNotFoundError } = require('../../errors/customDataErrs');
 const errMsg = require('../errorMessages');
 
 module.exports = class ResolutionsService {
-  constructor(Storage) {
+  constructor(Storage, PatientsService) {
     this.storage = Storage;
     this.patientsService = PatientsService;
     this.time = new TimeHelper();
