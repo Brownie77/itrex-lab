@@ -1,15 +1,18 @@
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-import { queueRoutes, doctorRoutes } from './routes/index.js';
+import { queueRoutes, doctorRoutes, authRoutes } from './routes/index.js';
 
 import err404Handle from './middleware/notFound.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-app.use(express.static(path.join(path.resolve(), 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
+app.use('/auth', authRoutes);
 app.use('/queue', queueRoutes);
 app.use('/doctor', doctorRoutes);
 

@@ -1,276 +1,73 @@
-// testing mysql
-const MySQLMock = require('../../mocks/mysql');
-const MapStrategyMysql = require('../../storage/mysql/strategies/map');
-const ArrayStrategyMysql = require('../../storage/mysql/strategies/array');
+require('dotenv').config();
 
-// testing inmemory
-const DB = require('../../storage/inmemory/database');
-const MapStrategy = require('../../storage/inmemory/strategies/map');
-const ArrayStrategy = require('../../storage/inmemory/strategies/array');
+let database = null;
+const RESOLUTIONS_DATABASE_TYPE = process.env.RESOLUTIONS_DATABASE_TYPE;
 
-// testing redis
-const RedisMock = require('../../mocks/redis');
-const MapStrategyRedis = require('../../storage/redis/strategies/map');
-const ArrayStrategyRedis = require('../../storage/redis/strategies/array');
+if (RESOLUTIONS_DATABASE_TYPE === 'inmemory') {
+  database = require('../storage/memoryDatabase');
+} else if (RESOLUTIONS_DATABASE_TYPE === 'redis') {
+  database = require('../storage/mocks/redis');
+} else throw new Error('Unknown or unsupported db type chosen');
 
-const Serv = require('./service');
-const StorageClient = require('../../storage/storageClient');
-const types = require('../../storage/storageTypes');
-const TimeHelper = require('../../utils/timeHelper');
-const Patient = require('../../models/patient');
-const errorText = require('../errorMsgs');
+const Service = require('./service');
+const StorageClient = require('./storageClient');
 
-const timeHelper = new TimeHelper();
+describe('test resolution service', () => {
+  const service = new Service(new StorageClient(database));
 
-const min = timeHelper.minToMs(1);
+  const data1 = { identifier: 'Seth', ttl: 1, resolution: 'testing' };
+  const data2 = { identifier: 'Ronald', ttl: 100, resolution: 'yes' };
 
-describe('test Resolution Service with inmemory storing', () => {
-  const db = DB;
+  it('should set resolution', async () => {
+    const spy = jest.spyOn(service, 'set');
 
-  let serv = null;
-  let storageClient = null;
-  let patients = null;
+    //creating two patients
+    await service.patientsService.create(data1);
+    await service.patientsService.create(data2);
 
-  let counter = 0;
+    await service.set(data1);
+    expect(spy).toBeCalledWith(data1);
 
-  beforeEach(() => {
-    counter += 1;
-    storageClient = new StorageClient(
-      db,
-      `${counter}-testresolutions`,
-      types.MAP,
-      MapStrategy,
-      ArrayStrategy,
-    );
-    patients = new StorageClient(
-      db,
-      `${counter}-testpatients`,
-      types.ARRAY,
-      MapStrategy,
-      ArrayStrategy,
-    );
-    serv = new Serv(storageClient, patients);
+    await service.set(data2);
+    expect(spy).toBeCalledWith(data2);
+
+    expect(spy).toBeCalledTimes(2);
   });
 
-  it('should set the resolution by key and return resolution by key', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    const val = await serv.getByKey(data);
-    expect(val.resolution).toEqual('text');
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number)); // unix timestamp
+  it('should return resolution by given key', async () => {
+    const result1 = await service.get(data1);
+    const result2 = await service.get(data2);
+
+    expect(result1.resolution).toBe(data1.resolution);
+    expect(result1.ttl).toBeDefined();
+
+    expect(result2.resolution).toBe(data2.resolution);
+    expect(result2.ttl).toBeDefined();
   });
 
-  it('should rewrite the resolution if the same key was given', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    let val = await serv.getByKey(data);
-    expect(val.resolution).toEqual('text');
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number));
-    const newData = { ttl: 10, id: 'Dima-1', resolution: 'texttext' };
-    await serv.set(newData);
-    val = await serv.getByKey(newData);
-    expect(val.resolution).toEqual(newData.resolution);
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number));
+  it('should override resolution if it already exists', async () => {
+    const data = { identifier: 'Seth', ttl: 1, resolution: 'testing override' };
+    let result = await service.get(data);
+
+    expect(result.resolution).toBe(data1.resolution);
+    expect(result.ttl).toBeDefined();
+
+    await service.set(data);
+
+    result = await service.get(data);
+    expect(result.resolution).toBe(data.resolution);
+    expect(result.ttl).toBeDefined();
   });
 
-  it('should delete the resolution manualy', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    let val = await serv.getByKey(data);
-    expect(val.resolution).toEqual('text');
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number));
-    await serv.delete(data);
-    try {
-      val = await serv.getByKey(data);
-    } catch (err) {
-      expect(err.message).toEqual(errorText.notfound);
-    }
-  });
+  it('should delete resolution by given key', async () => {
+    await service.delete(data1);
 
-  it('should delete the resolution after 1 minute', (done) => {
-    const testPatient = new Patient('Dima');
-    jest
-      .spyOn(patients, 'findByIdentifier')
-      .mockImplementation(() => testPatient);
-    const data = { ttl: 1, id: 'Dima-1', resolution: 'text' };
-    serv.set(data).then(() => {
-      serv.getByKey(data).then((value) => {
-        expect(value.resolution).toEqual('text'); // still exists
-      });
-    });
+    const result1 = await service.get(data1);
+    const result2 = await service.get(data2);
 
-    setTimeout(() => {
-      // after 1 minute
-      serv.getByKey(data).then((value) => {
-        expect(value).toStrictEqual({}); // deleted
-        done();
-      });
-    }, min);
-  });
-});
+    expect(result1).toStrictEqual({});
 
-// same tests for redis storage type
-describe('test Resolution Service with redis storing', () => {
-  const db = RedisMock;
-
-  let serv = null;
-  let storageClient = null;
-  let patients = null;
-
-  let counter = 0;
-
-  beforeEach(() => {
-    // because database classes are singletons,
-    // we init StorageClient with unique database names
-    // for each test case to have them empty to avoid UB
-    counter += 1;
-    storageClient = new StorageClient(
-      db,
-      `${counter}-testresolutions`,
-      types.MAP,
-      MapStrategyRedis,
-      ArrayStrategyRedis,
-    );
-    patients = new StorageClient(
-      db,
-      `${counter}-testpatients`,
-      types.ARRAY,
-      MapStrategyRedis,
-      ArrayStrategyRedis,
-    );
-    serv = new Serv(storageClient, patients);
-  });
-
-  it('should set the resolution by key and return resolution by key', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    const val = await serv.getByKey(data);
-    expect(val.resolution).toEqual('text');
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number)); // unix timestamp
-  });
-
-  it('should rewrite the resolution if the same key was given', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    let val = await serv.getByKey(data);
-    expect(val.resolution).toEqual('text');
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number));
-    const newData = { ttl: 10, id: 'Dima-1', resolution: 'texttext' };
-    await serv.set(newData);
-    val = await serv.getByKey(newData);
-    expect(val.resolution).toEqual(newData.resolution);
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number));
-  });
-
-  it('should delete the resolution manualy', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    let val = await serv.getByKey(data);
-    expect(val.resolution).toEqual('text');
-    expect(val.patient).not.toBeUndefined();
-    expect(val.ttl).toEqual(expect.any(Number));
-    await serv.delete(data);
-    try {
-      val = await serv.getByKey(data);
-    } catch (err) {
-      expect(err.message).toEqual(errorText.notfound);
-    }
-  });
-
-  it('should delete the resolution after 1 minute', (done) => {
-    const testPatient = new Patient('Dima');
-    jest
-      .spyOn(patients, 'findByIdentifier')
-      .mockImplementation(() => testPatient);
-    const data = { ttl: 1, id: 'Dima-1', resolution: 'text' };
-    serv.set(data).then(() => {
-      serv.getByKey(data).then((value) => {
-        expect(value.resolution).toEqual('text'); // still exists
-      });
-    });
-
-    setTimeout(() => {
-      // after 1 minute
-      serv.getByKey(data).then((value) => {
-        expect(value).toStrictEqual({}); // deleted
-        done();
-      });
-    }, min);
-  });
-});
-
-describe('test Resolution Service with mysql storing', () => {
-  const db = MySQLMock;
-
-  let serv = null;
-  let storageClient = null;
-  let patients = null;
-
-  let counter = 0;
-
-  beforeEach(() => {
-    counter += 1;
-    storageClient = new StorageClient(
-      db,
-      `${counter}-testresolutions`,
-      types.MAP,
-      MapStrategyMysql,
-      ArrayStrategyMysql,
-    );
-    patients = new StorageClient(
-      db,
-      `${counter}-testpatients`,
-      types.ARRAY,
-      MapStrategyMysql,
-      ArrayStrategyMysql,
-    );
-    serv = new Serv(storageClient, patients);
-  });
-
-  it('should set the resolution by key and return resolution by key', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    const val = await serv.getByKey(data);
-    expect(val.resolution).toBeDefined();
-    expect(val.PatientId).toEqual(expect.any(String));
-    expect(val.ttl).toBeDefined();
-  });
-
-  it('should delete the resolution', async () => {
-    const patient = new Patient('Dima');
-    jest.spyOn(patients, 'findByIdentifier').mockImplementation(() => patient);
-    const data = { ttl: 10, id: 'Dima-1', resolution: 'text' };
-    await serv.set(data);
-    let val = await serv.getByKey(data);
-    expect(val.resolution).toBeDefined();
-    expect(val.PatientId).toEqual(expect.any(String));
-    expect(val.ttl).toBeDefined();
-    await serv.delete(data);
-    try {
-      val = await serv.getByKey(data);
-    } catch (err) {
-      expect(err.message).toEqual(errorText.notfound);
-    }
+    expect(result2.resolution).toBe(data2.resolution);
+    expect(result2.ttl).toBeDefined();
   });
 });

@@ -30,7 +30,7 @@ docker-compose down
 
 ## MySQL relations
 
-![relations](/api/relations.png?raw=true)
+![relations](/relations.png?raw=true)
 
 ## Documentation
 
@@ -57,5 +57,3 @@ Navigate to the api directory and run:
 ```bash
 npm test
 ```
-
-Some of the tests will need some time to finish. <b>ETA: 2 minutes</b>;

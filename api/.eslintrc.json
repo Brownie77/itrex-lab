@@ -12,7 +12,6 @@
   },
   "rules": {
     "no-unused-vars": "warn",
-    "no-console": "warn",
-    "import/no-dynamic-require": "off"
+    "no-console": "warn"
   }
 }

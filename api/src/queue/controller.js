@@ -1,3 +1,4 @@
+const adapt = require('../../utils/adapt');
 const status = require('../statuses');
 
 module.exports = class QueueController {
@@ -7,9 +8,9 @@ module.exports = class QueueController {
 
   next = async (req, res, next) => {
     try {
-      const nextPatient = await this.service.getNext();
+      const patient = await this.service.getNext();
 
-      return res.status(status.OK).send(nextPatient);
+      return res.status(status.OK).send(patient);
     } catch (error) {
       return next(error);
     }
@@ -17,8 +18,7 @@ module.exports = class QueueController {
 
   first = async (req, res, next) => {
     try {
-      const patient = await this.service.getFirst();
-
+      const patient = await this.service.get();
       return res.status(status.OK).send(patient);
     } catch (error) {
       return next(error);
@@ -27,9 +27,19 @@ module.exports = class QueueController {
 
   addNewPatient = async (req, res, next) => {
     try {
-      const data = req.body;
+      const config = {
+        props: [
+          {
+            where: 'body',
+            what: 'name',
+            as: 'identifier',
+            do: ['capitalize'],
+          },
+        ],
+      };
 
-      await this.service.enqueue(data);
+      const patient = adapt(config, req);
+      await this.service.enqueue(patient);
 
       return res.status(status.CREATED).send();
     } catch (error) {

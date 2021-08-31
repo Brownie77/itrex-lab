@@ -1,3 +1,6 @@
+const adapt = require('../../utils/adapt');
+const decorate = require('../../utils/decorate');
+const schema = require('./outputSchemas');
 const status = require('../statuses');
 
 module.exports = class ResolutionController {
@@ -7,12 +10,21 @@ module.exports = class ResolutionController {
 
   get = async (req, res, next) => {
     try {
-      const data = req.params;
+      const config = {
+        props: [
+          {
+            where: 'params',
+            what: 'patientId',
+            as: 'identifier', // save as
+          },
+        ],
+      };
+      const data = adapt(config, req);
 
-      const found = await this.service.getByKey(data);
+      let response = await this.service.get(data);
+      response = decorate(schema.resolution, response);
 
-      delete found.ttl;
-      return res.status(status.OK).send(found);
+      return res.status(status.OK).send(response);
     } catch (error) {
       return next(error);
     }
@@ -20,11 +32,26 @@ module.exports = class ResolutionController {
 
   set = async (req, res, next) => {
     try {
-      const data = {
-        id: req.params.id,
-        resolution: req.body.resolution,
-        ttl: req.body.ttl,
+      const config = {
+        props: [
+          {
+            where: 'params',
+            what: 'patientId',
+            as: 'identifier',
+            do: ['capitalize'],
+          },
+          {
+            where: 'body',
+            what: 'resolution',
+            do: ['trim'],
+          },
+          {
+            where: 'body',
+            what: 'ttl',
+          },
+        ],
       };
+      const data = adapt(config, req);
 
       await this.service.set(data);
 
@@ -36,13 +63,20 @@ module.exports = class ResolutionController {
 
   delete = async (req, res, next) => {
     try {
-      const data = {
-        id: req.params.id,
+      const config = {
+        props: [
+          {
+            where: 'params',
+            what: 'patientId',
+            as: 'identifier',
+            do: ['capitalize'],
+          },
+        ],
       };
-
+      const data = adapt(config, req);
       await this.service.delete(data);
 
-      return res.status(status.OK).send();
+      return res.status(status.NO_CONTENT).send();
     } catch (error) {
       return next(error);
     }

@@ -1,64 +1,56 @@
-const errorMsgs = require('../errorMsgs');
+const PatientsService = require('../patients/initService');
 const TimeHelper = require('../../utils/timeHelper');
 const { DataNotFoundError } = require('../../errors/customDataErrs');
-const Resolution = require('../../models/resolution');
+const errMsg = require('../errorMessages');
 
-module.exports = class ResolutionService {
-  constructor(ResolutionStorageClient, PatientStorageClient) {
-    this.resolutionStorage = ResolutionStorageClient;
-    this.patients = PatientStorageClient;
-    this.timeHelper = new TimeHelper();
-    this.ttl_default = process.env.TTL_DEF;
+module.exports = class ResolutionsService {
+  constructor(Storage) {
+    this.storage = Storage;
+    this.patientsService = PatientsService;
+    this.time = new TimeHelper();
   }
 
   async set(data) {
-    const { id: identifier } = data;
-    const ttl = this.#setTTL(data.ttl);
-    const patient = await this.patients.findByIdentifier(identifier);
-    const resolution = new Resolution(patient, data.resolution, ttl);
-    return this.resolutionStorage.insert(patient.id, resolution);
+    const payload = { ...data };
+    delete payload.identifier;
+
+    const { id } = await this.patientsService.getId({
+      identifier: data.identifier,
+    });
+
+    const validThru = payload.ttl || process.env.TTL_DEF;
+
+    payload.ttl = this.time.now() + this.time.minToMs(validThru);
+
+    return this.storage.save({ id }, payload);
   }
 
-  async getByKey({ id: identifier }) {
-    const data = await this.patients.findByIdentifier(identifier);
-    if (!data?.id) {
-      throw new DataNotFoundError(errorMsgs.notfound); // no patient found
+  async get(data) {
+    const patient = await this.patientsService.getId({
+      identifier: data.identifier,
+    });
+
+    if (!patient) {
+      throw new DataNotFoundError(errMsg.notfound);
     }
-    const { id } = data;
-    const exist = await this.resolutionStorage.exist(id);
-    if (!exist) {
-      return {}; // no resolution
+
+    const { id } = patient;
+    const found = await this.storage.getOne({ where: { id } });
+
+    if (found.ttl && found.ttl > this.time.now()) {
+      return found;
+    } else if (found.ttl && found.ttl <= this.time.now()) {
+      await this.delete(data);
     }
-    const result = await this.resolutionStorage.get(id);
-    if (this.#isOutdated(result.ttl)) {
-      await this.#reset(identifier);
-      return {};
-    }
-    return result;
+
+    return {};
   }
 
-  #setTTL(ttl) {
-    if (ttl === 0) {
-      return Date.now() + this.timeHelper.minToMs(this.ttl_default);
-    }
-    return Date.now() + this.timeHelper.minToMs(ttl);
-  }
+  async delete(data) {
+    const { id } = await this.patientsService.getId({
+      identifier: data.identifier,
+    });
 
-  // eslint-disable-next-line class-methods-use-this
-  #isOutdated(ttl) {
-    return ttl ? ttl < Date.now() : false;
-  }
-
-  async #reset(key) {
-    const { id } = await this.patients.findByIdentifier(key);
-    const exist = await this.resolutionStorage.exist(id);
-    if (!exist) {
-      throw new DataNotFoundError(errorMsgs.notfound);
-    }
-    return this.resolutionStorage.delete(id);
-  }
-
-  async delete({ id }) {
-    return this.#reset(id);
+    return this.storage.deleteOne({ where: { id } });
   }
 };
