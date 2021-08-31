@@ -52,7 +52,9 @@ And navigate to [http://localhost:8080/api-docs/](http://localhost:8080/api-docs
 
 ## Unit testing
 
-Navigate to the api directory and run:
+Uncomment <b>test=true</b> in the .env file (will be fixed soon) and set the configuration you want to test(doesn't support mysql)
+
+Then navigate to the api directory and run:
 
 ```bash
 npm test
