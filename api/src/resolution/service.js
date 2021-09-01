@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const TimeHelper = require('../../utils/timeHelper');
 const { DataNotFoundError } = require('../../errors/customDataErrs');
 const errMsg = require('../errorMessages');
@@ -24,7 +25,7 @@ module.exports = class ResolutionsService {
     return this.storage.save({ id }, payload);
   }
 
-  async get(data) {
+  async getByName(data) {
     const patient = await this.patientsService.getId({
       name: data.name,
     });
@@ -38,18 +39,39 @@ module.exports = class ResolutionsService {
 
     if (found.ttl && found.ttl > this.time.now()) {
       return found;
-    } else if (found.ttl && found.ttl <= this.time.now()) {
+    }
+    if (found.ttl && found.ttl <= this.time.now()) {
       await this.delete(data);
     }
 
     return {};
   }
 
-  async delete(data) {
-    const { id } = await this.patientsService.getId({
-      name: data.name,
+  async get(token) {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const patient = await this.patientsService.findOne({
+      where: { userId: decoded.userId },
+      include: [
+        {
+          model: this.storage.instanceDb.resolution,
+          required: false,
+        },
+      ],
     });
 
-    return this.storage.deleteOne({ where: { id } });
+    const found = patient?.resolution?.dataValues;
+
+    if (found && found.ttl > this.time.now()) {
+      return found.resolution;
+    }
+    if (found && found.ttl <= this.time.now()) {
+      await this.delete({ where: { patientId: patient.id } });
+    }
+
+    return null;
+  }
+
+  async delete(query) {
+    return this.storage.deleteOne(query);
   }
 };

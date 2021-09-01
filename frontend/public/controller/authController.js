@@ -3,12 +3,26 @@ export default class AuthController {
     this.view = authView;
     this.model = authModel;
 
+    if (window.location.pathname === '/cabinet') {
+      this.handleProtectedRouteAccess();
+    }
+
+    if (
+      window.location.pathname === '/auth/sign_in' ||
+      window.location.pathname === '/auth/sign_up'
+    ) {
+      this.handleAuthRoutes();
+    }
+
     document
       .getElementById('register-btn')
       ?.addEventListener('click', this.handleRegister.bind(this));
     document
       .getElementById('login-btn')
       ?.addEventListener('click', this.handleLogin.bind(this));
+    document
+      .getElementById('logout-btn')
+      ?.addEventListener('click', this.handleLogout.bind(this));
   }
 
   async handleRegister(event) {
@@ -31,7 +45,7 @@ export default class AuthController {
         throw new Error('User wasnt registered');
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   }
 
@@ -55,7 +69,38 @@ export default class AuthController {
         throw new Error('Cannot login');
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+    }
+  }
+
+  async handleLogout() {
+    try {
+      await this.model.logout();
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  async handleProtectedRouteAccess() {
+    try {
+      const allowed = await this.model.authenticate();
+      if (allowed.status !== 200) {
+        window.location.href = 'http://localhost:3000/auth/sign_in';
+      }
+    } catch (err) {
+      window.location.href = 'http://localhost:3000/auth/sign_in';
+      console.log(err.message);
+    }
+  }
+
+  async handleAuthRoutes() {
+    try {
+      const notAllowed = await this.model.notAuthenticated();
+      if (notAllowed.data) {
+        window.location.href = 'http://localhost:3000/cabinet';
+      }
+    } catch (err) {
+      console.log(err.message);
     }
   }
 }

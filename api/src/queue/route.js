@@ -51,11 +51,7 @@ router.get('/', queueController.first);
  *        description: Unexpected server error
  */
 
-router.post(
-  '/',
-  validate({ body: schemas.patientSchema }),
-  queueController.addNewPatient,
-);
+router.post('/', queueController.addNewPatient);
 
 /**
  * @swagger
@@ -76,6 +72,8 @@ router.post(
  */
 
 router.get('/next', queueController.next);
+
+router.get('/position', queueController.position);
 
 module.exports = router;
 

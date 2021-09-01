@@ -12,6 +12,7 @@ module.exports.userSchema = {
   properties: {
     email: {
       type: 'string',
+      pattern: '^\\S+@\\S+$',
       maxLength: 30,
       minLength: 3,
     },
@@ -46,6 +47,7 @@ module.exports.loginSchema = {
   properties: {
     email: {
       type: 'string',
+      pattern: '^\\S+@\\S+$',
       maxLength: 30,
       minLength: 3,
     },

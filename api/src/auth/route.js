@@ -17,4 +17,10 @@ router.post(
   authController.login,
 );
 
+router.post('/authenticate', authController.authenticate);
+
+router.post('/not-authenticated', authController.notAuthenticated);
+
+router.post('/logout', authController.logout);
+
 module.exports = router;

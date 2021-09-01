@@ -1,17 +1,16 @@
+const jwt = require('jsonwebtoken');
+
 module.exports = class QueueService {
   constructor(Storage, PatientsService) {
     this.storage = Storage;
     this.patientsService = PatientsService;
   }
 
-  async enqueue(data) {
-    const patient = await this.patientsService.getId(data);
-
-    if (!patient) {
-      const { id } = await this.patientsService.create(data);
-      return this.storage.save(id);
-    }
-
+  async enqueue(token) {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const patient = await this.patientsService.findOne({
+      where: { userId: decoded.userId },
+    });
     return this.storage.save(patient.id);
   }
 
@@ -22,6 +21,19 @@ module.exports = class QueueService {
     }
     const patient = await this.patientsService.findOne({ where: { id } });
     return patient;
+  }
+
+  async getPosition(token) {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const patient = await this.patientsService.findOne({
+      where: { userId: decoded.userId },
+    });
+
+    const pos = await this.storage.find(patient.id);
+    if (pos !== -1) {
+      return pos + 1;
+    }
+    return null;
   }
 
   async #delete() {

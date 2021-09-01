@@ -17,7 +17,7 @@ module.exports = class MemoryStrategy {
     return this.db.splice(at, 1);
   }
 
-  async has(value) {
-    return this.db.includes(value);
+  async find(value) {
+    return this.db.findIndex((el) => value === el);
   }
 };

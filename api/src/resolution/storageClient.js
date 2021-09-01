@@ -2,6 +2,7 @@ module.exports = class ResolutionsStorageClient {
   constructor(database, name) {
     this.name = name;
     this.db = database.db;
+    this.instanceDb = database;
     this.model = database.resolution;
   }
 
@@ -25,6 +26,6 @@ module.exports = class ResolutionsStorageClient {
   }
 
   async deleteOne(query) {
-    this.model.destroy({ where: { patientId: query.where.id } });
+    this.model.destroy(query);
   }
 };

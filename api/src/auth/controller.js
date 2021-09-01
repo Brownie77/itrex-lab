@@ -33,11 +33,11 @@ module.exports = class AuthController {
     try {
       const data = adapt(
         {
-          props: [{ where: 'cookies', what: 'access_token' }],
+          props: [{ where: 'cookies', what: 'access_token', onError: 401 }],
         },
         req,
       );
-      await this.service.authenticate(data);
+      // await this.service.authenticate(data);
 
       return res.status(status.OK).send();
     } catch (error) {
@@ -65,6 +65,25 @@ module.exports = class AuthController {
           httpOnly: true,
         })
         .send();
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  logout = async (req, res, next) => {
+    try {
+      return res.status(status.OK).clearCookie('access_token').send();
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  notAuthenticated = async (req, res, next) => {
+    try {
+      if (req.cookies.access_token) {
+        return res.status(status.OK).send(true);
+      }
+      return res.status(status.OK).send(false);
     } catch (error) {
       return next(error);
     }

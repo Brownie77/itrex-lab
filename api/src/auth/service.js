@@ -1,6 +1,10 @@
 const { promisify } = require('util');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { DataForbiddenError } = require('../../errors/customDataErrs');
+const {
+  DataForbiddenError,
+  DataNotFoundError,
+} = require('../../errors/customDataErrs');
 
 const saltRounds = 10;
 
@@ -29,13 +33,12 @@ module.exports = class AuthService {
     const user = await this.storage.getUser(data);
 
     if (!user) {
-      throw new Error('Not found'); // add custom 404 here later
+      throw new DataNotFoundError('User not found');
     }
 
     const match = await this.compare(data.password, user.dataValues.password);
     if (match) {
-      // generate jwt here
-      return 'ok';
+      return jwt.sign({ userId: user.id }, process.env.SECRET);
     }
     throw new DataForbiddenError('Wrong password');
   }

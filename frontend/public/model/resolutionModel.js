@@ -8,6 +8,15 @@ export default class ResolutionModel {
       });
   }
 
+  fetchResolution() {
+    const config = {
+      method: 'GET',
+      url: `http://localhost:8080/api/v1/patients/resolution`,
+      withCredentials: true,
+    };
+    return axios(config).then((res) => res);
+  }
+
   setByName(name, resolution, ttl) {
     const config = {
       method: 'PUT',

@@ -8,20 +8,28 @@ export default class ResolutionController {
     this.EmptyQueueMsg = '<empty>';
     this.NoPatientFoundMsg = '<no such patient>';
 
-    //TODO: fix error messages
+    document.addEventListener('DOMContentLoaded', this.handleLoad.bind(this));
 
     document
       .getElementById('resolution-add-btn')
       ?.addEventListener('click', this.handleAddResolution.bind(this));
-    document
-      .getElementById('search-resolution-client')
-      ?.addEventListener('click', this.handleSearchClient.bind(this));
     document
       .getElementById('search-resolution-doctor')
       ?.addEventListener('click', this.handleSearchDoctor.bind(this));
     document
       .getElementById('resolution-delete-btn')
       ?.addEventListener('click', this.handleDeleteResolution.bind(this));
+  }
+
+  async handleLoad() {
+    try {
+      const { data } = await this.model.fetchResolution();
+      if (data.resolution) {
+        this.view.setResolution(data.resolution);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async handleAddResolution() {
@@ -37,26 +45,6 @@ export default class ResolutionController {
       const patient = this.view.getCurrentPatientName();
       if (patient !== this.EmptyQueueMsg) {
         await this.model.setByName(patient, resolution, ttl);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async handleSearchClient() {
-    try {
-      const searchName = this.view.getClientSearchInput();
-      if (searchName) {
-        const [resolution, status] = await this.model.getByName(searchName);
-        let textToDisplay = resolution;
-        if (resolution) {
-          this.selectedPatient = searchName;
-        } else if (status === 200) {
-          textToDisplay = this.EmptyResolutionMsg;
-        } else {
-          textToDisplay = this.NoPatientFoundMsg;
-        }
-        this.view.displayResolutionClientAndClearSearchInput(textToDisplay);
       }
     } catch (e) {
       console.log(e);

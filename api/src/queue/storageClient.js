@@ -11,6 +11,10 @@ module.exports = class QueueStorageClient {
     return this.strategy.save(patient);
   }
 
+  async find(patient) {
+    return this.strategy.find(patient);
+  }
+
   async getAtPosition(at) {
     return this.strategy.getAtPosition(at);
   }

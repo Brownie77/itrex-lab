@@ -1,11 +1,20 @@
 export default class QueueModel {
-  enqueue(person) {
+  enqueue() {
     const config = {
       method: 'POST',
       url: 'http://localhost:8080/api/v1/queue',
-      data: { name: person },
+      withCredentials: true,
     };
-    return axios(config).then((res) => res.data);
+    return axios(config).then((res) => res);
+  }
+
+  getPosition() {
+    const config = {
+      method: 'GET',
+      url: 'http://localhost:8080/api/v1/queue/position',
+      withCredentials: true,
+    };
+    return axios(config).then((res) => res);
   }
 
   getFirst() {

@@ -23,6 +23,7 @@
 #add-to-queue-btn {
   float: right;
   margin-left: 0.3rem;
+  width: 100px;
   border-radius: 8px;
 }
 
@@ -42,4 +43,11 @@
 
 #client-resolution-found {
   resize: none;
+}
+
+#position {
+  text-align: center;
+  color: #fff;
+  font-size: 50px;
+  font-style: italic;
 }

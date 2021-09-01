@@ -28,7 +28,11 @@
           </div>
           <div class="col">
             <form action="/auth/sign_in">
-              <button type="submit" class="btn btn-danger btn-wide">
+              <button
+                type="submit"
+                id="logout-btn"
+                class="btn btn-danger btn-wide"
+              >
                 Sign out
               </button>
             </form>
@@ -40,23 +44,17 @@
         <div class="row">
           <div class="col" id="display-queue">
             <h2>Set up an appointment</h2>
-            <span>Queue length:</span>
-            <h1 id="placeholder">&lt;empty&gt;</h1>
+            <span>Your position in the queue:</span>
+            <h1 id="position">&lt;none&gt;</h1>
           </div>
           <div class="col" id="client-enqueue">
             <div class="form-group" id="add-to-queue-form">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Name (length 3+)"
-                id="name"
-              />
               <button
                 type="button"
                 class="btn btn-primary"
                 id="add-to-queue-btn"
               >
-                Add
+                Set up
               </button>
             </div>
           </div>
@@ -65,33 +63,14 @@
       <hr />
       <div class="container" id="resolution">
         <div class="row">
-          <div class="col">
-            <div class="form-group" id="resolution-search-form">
-              <input
-                class="form-control mr-sm-2"
-                type="text"
-                placeholder="Search for a resolution by name"
-                id="client-search"
-              />
-              <button
-                class="btn btn-outline-success my-2 my-sm-0"
-                id="search-resolution-client"
-                type="button"
-              >
-                Search
-              </button>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <textarea
-                class="form-control"
-                disabled
-                id="client-resolution-found"
-                rows="10"
-                placeholder="If found, the resolution will be displayed here"
-              ></textarea>
-            </div>
+          <div class="form-group">
+            <textarea
+              class="form-control"
+              disabled
+              id="client-resolution-found"
+              rows="10"
+              placeholder="If exists, your resolution will be displayed here"
+            ></textarea>
           </div>
         </div>
       </div>

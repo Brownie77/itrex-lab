@@ -1,7 +1,6 @@
 export default class ResolutionView {
   constructor() {
     this.resolutionSearchInputDoctor = document.getElementById('doctor-search');
-    this.resolutionSearchInputClient = document.getElementById('client-search');
     this.currentPatient = document.getElementById('placeholder');
     this.queueInput = document.getElementById('name');
     this.addResolutionInput = document.getElementById('resolution-text');
@@ -13,6 +12,8 @@ export default class ResolutionView {
       'client-resolution-found',
     );
     this.deleteResolutionBtn = document.getElementById('resolution-delete-btn');
+    this.resolutionDisplay =
+      document.getElementById('client-resolution-found') || null;
   }
 
   displayResolutionDoctorAndClearSearchInput(resolution) {
@@ -39,6 +40,11 @@ export default class ResolutionView {
     const ttl = this.resolutionTTL.value;
     this.resolutionTTL.value = '';
     return ttl;
+  }
+
+  setResolution(text) {
+    this.resolutionDisplay.value = text;
+    return this;
   }
 
   getCurrentAppointmentResolutionAndClearInput() {

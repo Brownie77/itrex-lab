@@ -21,10 +21,31 @@ module.exports = class ResolutionController {
       };
       const data = adapt(config, req);
 
-      let response = await this.service.get(data);
+      let response = await this.service.getByName(data);
       response = decorate(schema.resolution, response);
 
       return res.status(status.OK).send(response);
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  ownResolution = async (req, res, next) => {
+    try {
+      const config = {
+        props: [
+          {
+            where: 'cookies',
+            what: 'access_token',
+            onError: 401,
+          },
+        ],
+      };
+
+      const { access_token: accessToken } = adapt(config, req);
+      const response = await this.service.get(accessToken);
+
+      return res.status(status.OK).send({ resolution: response });
     } catch (error) {
       return next(error);
     }

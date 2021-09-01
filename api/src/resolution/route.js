@@ -79,6 +79,8 @@ router.put(
   resolutionController.set,
 );
 
+router.get('/resolution', resolutionController.ownResolution);
+
 /**
  * @swagger
  *  api/v1/patients/{patientId}/resolutions:
