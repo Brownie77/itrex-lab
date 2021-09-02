@@ -2,10 +2,7 @@ export default class ResolutionModel {
   getByName(name) {
     return axios
       .get(`http://localhost:8080/api/v1/patients/${name}/resolutions`)
-      .then((res) => [res.data.resolution, res.status])
-      .catch((error) => {
-        return [undefined, error.response.status];
-      });
+      .then((res) => res.data);
   }
 
   fetchResolution() {

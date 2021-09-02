@@ -21,8 +21,7 @@ module.exports = class ResolutionController {
       };
       const data = adapt(config, req);
 
-      let response = await this.service.getByName(data);
-      response = decorate(schema.resolution, response);
+      const response = await this.service.getAllByName(data);
 
       return res.status(status.OK).send(response);
     } catch (error) {

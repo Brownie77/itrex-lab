@@ -42,6 +42,4 @@ module.exports = class AuthService {
     }
     throw new DataForbiddenError('Wrong password');
   }
-
-  async authenticate(data) {}
 };

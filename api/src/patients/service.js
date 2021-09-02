@@ -4,7 +4,7 @@ module.exports = class PatientsService {
   }
 
   async getId(data) {
-    const person = await this.findOne({ where: data });
+    const person = await this.findOne(data);
 
     if (person) {
       return { id: person.id };
@@ -19,6 +19,10 @@ module.exports = class PatientsService {
     delete patient.email;
 
     return this.storage.save(patient);
+  }
+
+  async findAll(query) {
+    return this.storage.findAll(query);
   }
 
   async findOne(query) {

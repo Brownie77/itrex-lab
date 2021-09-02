@@ -8,10 +8,9 @@ export default class ResolutionView {
     this.resolutionOutputDoctor = document.getElementById(
       'doctor-resolution-found',
     );
-    this.resolutionOutputClient = document.getElementById(
-      'client-resolution-found',
-    );
+    this.resolutionOutput = document.getElementById('resolution-search');
     this.deleteResolutionBtn = document.getElementById('resolution-delete-btn');
+    this.patientList = document.getElementById('patients-list');
     this.resolutionDisplay =
       document.getElementById('client-resolution-found') || null;
   }
@@ -73,5 +72,20 @@ export default class ResolutionView {
       this.resolutionOutputClient.value = '';
     }
     return this;
+  }
+
+  hideOutput() {
+    this.resolutionOutput.style.display = 'none';
+  }
+
+  showOutput() {
+    this.resolutionOutput.style.display = null;
+  }
+
+  renderPatientCard(patient) {
+    const card = document.createElement('div');
+    card.className = 'patient-card';
+    card.innerHTML = `${patient.name}, ${patient.birthdate}, ${patient.gender},  <button class="get-resolution-button" />`;
+    this.patientList.append(card);
   }
 }

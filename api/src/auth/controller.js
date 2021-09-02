@@ -78,7 +78,7 @@ module.exports = class AuthController {
     }
   };
 
-  notAuthenticated = async (req, res, next) => {
+  isAuthenticated = async (req, res, next) => {
     try {
       if (req.cookies.access_token) {
         return res.status(status.OK).send(true);

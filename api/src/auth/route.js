@@ -19,7 +19,7 @@ router.post(
 
 router.post('/authenticate', authController.authenticate);
 
-router.post('/not-authenticated', authController.notAuthenticated);
+router.post('/is-authenticated', authController.isAuthenticated);
 
 router.post('/logout', authController.logout);
 

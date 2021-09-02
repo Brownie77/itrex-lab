@@ -25,9 +25,19 @@ module.exports = class ResolutionsService {
     return this.storage.save({ id }, payload);
   }
 
+  async getAllByName(data) {
+    return this.patientsService.findAll({
+      where: {
+        name: data.name,
+      },
+    });
+  }
+
   async getByName(data) {
     const patient = await this.patientsService.getId({
-      name: data.name,
+      where: {
+        name: data.name,
+      },
     });
 
     if (!patient) {

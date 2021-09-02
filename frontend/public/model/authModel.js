@@ -40,7 +40,7 @@ export default class AuthModel {
   async notAuthenticated() {
     const config = {
       method: 'POST',
-      url: 'http://localhost:8080/api/v1/auth/not-authenticated',
+      url: 'http://localhost:8080/api/v1/auth/is-authenticated',
       withCredentials: true,
     };
     return axios(config).then((res) => res);

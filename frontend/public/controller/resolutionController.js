@@ -56,19 +56,12 @@ export default class ResolutionController {
   async handleSearchDoctor() {
     try {
       const searchName = this.view.getDoctorSearchInput();
-      if (searchName) {
-        const [resolution, status] = await this.model.getByName(searchName);
-        let textToDisplay = resolution;
-        if (resolution) {
-          this.selectedPatient = searchName;
-          this.view.setDeleteButtonState(true);
-        } else if (status === 200) {
-          textToDisplay = this.EmptyResolutionMsg;
-        } else {
-          textToDisplay = this.NoPatientFoundMsg;
-        }
-
-        this.view.displayResolutionDoctorAndClearSearchInput(textToDisplay);
+      if (searchName.length) {
+        this.view.hideOutput();
+        const data = await this.model.getByName(searchName);
+        data.map((patient) => {
+          this.view.renderPatientCard(patient);
+        });
       }
     } catch (e) {
       console.log(e);
