@@ -23,9 +23,11 @@ export default class ResolutionController {
 
   async handleLoad() {
     try {
-      const { data } = await this.model.fetchResolution();
-      if (data.resolution) {
-        this.view.setResolution(data.resolution);
+      if (window.location.pathname === '/cabinet') {
+        const { data } = await this.model.fetchResolution();
+        if (data.resolution) {
+          this.view.setResolution(data.resolution);
+        }
       }
     } catch (err) {
       console.log(err);

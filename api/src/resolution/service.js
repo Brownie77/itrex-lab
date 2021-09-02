@@ -65,13 +65,20 @@ module.exports = class ResolutionsService {
       return found.resolution;
     }
     if (found && found.ttl <= this.time.now()) {
-      await this.delete({ where: { patientId: patient.id } });
+      await this.deleteOne({ where: { patientId: patient.id } });
     }
 
     return null;
   }
 
-  async delete(query) {
+  async deleteOne(query) {
     return this.storage.deleteOne(query);
+  }
+
+  async delete({ name }) {
+    const patient = await this.patientsService.findOne({ where: { name } });
+    return this.storage.deleteOne({
+      where: { patientId: patient.id },
+    });
   }
 };

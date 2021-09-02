@@ -25,6 +25,11 @@ module.exports = class RedisStrategy {
     return this.db.set(this.name, JSON.stringify(array));
   }
 
+  async find(value) {
+    const array = await this.#getArray();
+    return array.findIndex((el) => value === el);
+  }
+
   async #getArray() {
     const array = await this.db.get(this.name);
     return array ? JSON.parse(array) : [];
