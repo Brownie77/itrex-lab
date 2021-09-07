@@ -1,4 +1,5 @@
 const adapt = require('../../utils/adapt');
+const TimeHelper = require('../../utils/timeHelper');
 const status = require('../statuses');
 
 module.exports = class AuthController {
@@ -6,7 +7,7 @@ module.exports = class AuthController {
     this.service = Service;
   }
 
-  register = async (req, res, next) => {
+  registration = async (req, res, next) => {
     try {
       const data = adapt(
         {
@@ -21,7 +22,7 @@ module.exports = class AuthController {
         },
         req,
       );
-      await this.service.register(data);
+      await this.service.registration(data);
 
       return res.status(status.CREATED).send();
     } catch (error) {
@@ -37,7 +38,6 @@ module.exports = class AuthController {
         },
         req,
       );
-      // await this.service.authenticate(data);
 
       return res.status(status.OK).send();
     } catch (error) {
@@ -61,7 +61,9 @@ module.exports = class AuthController {
       return res
         .status(status.OK)
         .cookie('access_token', accessToken, {
-          expires: new Date(Date.now() + 8 * 3600000),
+          expires: new Date(
+            Date.now() + TimeHelper.hoursToMs(process.env.COOKIE_LIFE_TIME),
+          ),
           httpOnly: true,
         })
         .send();

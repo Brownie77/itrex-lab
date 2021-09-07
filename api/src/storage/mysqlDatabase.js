@@ -1,5 +1,9 @@
 const { Sequelize } = require('sequelize');
 
+const {
+  DatabaseFailedToConnectError,
+} = require('../../errors/customDatabaseErrs');
+
 const userModel = require('./models/user');
 const patientModel = require('./models/patient');
 const resolutionModel = require('./models/resolution');
@@ -13,7 +17,7 @@ module.exports = new (class Database {
       process.env.MYSQL_PASSWORD,
       {
         dialect: process.env.dialect,
-        host: process.env.MYSQL_HOST || process.env.MYSQL_DEF_HOST,
+        host: process.env.MYSQL_HOST,
         port: process.env.MYSQL_PORT,
       },
     );
@@ -23,7 +27,10 @@ module.exports = new (class Database {
         console.log('MySQL connection has been established successfully.');
       })
       .catch((err) => {
-        console.log('Unable to connect to the MySQL database:', err);
+        throw new DatabaseFailedToConnectError(
+          'Unable to connect to the MySQL database:',
+          err,
+        );
       });
 
     this.user = this.db.define('users', userModel);

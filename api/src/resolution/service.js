@@ -1,13 +1,10 @@
 const jwt = require('jsonwebtoken');
 const TimeHelper = require('../../utils/timeHelper');
-const { DataNotFoundError } = require('../../errors/customDataErrs');
-const errMsg = require('../errorMessages');
 
 module.exports = class ResolutionsService {
   constructor(Storage, PatientsService) {
     this.storage = Storage;
     this.patientsService = PatientsService;
-    this.time = new TimeHelper();
   }
 
   async set(data) {
@@ -18,9 +15,9 @@ module.exports = class ResolutionsService {
       name: data.name,
     });
 
-    const validThru = payload.ttl || process.env.TTL_DEF;
+    const TTL = payload.ttl || process.env.TTL_DEF;
 
-    payload.ttl = this.time.now() + this.time.minToMs(validThru);
+    payload.ttl = TimeHelper.now() + TimeHelper.minToMs(TTL);
 
     return this.storage.save({ id }, payload);
   }
@@ -30,17 +27,13 @@ module.exports = class ResolutionsService {
       name: data.name,
     });
 
-    if (!patient) {
-      throw new DataNotFoundError(errMsg.notfound);
-    }
-
     const { id } = patient;
     const found = await this.storage.getOne({ where: { id } });
 
-    if (found.ttl && found.ttl > this.time.now()) {
+    if (found.ttl && found.ttl > TimeHelper.now()) {
       return found;
     }
-    if (found.ttl && found.ttl <= this.time.now()) {
+    if (found.ttl && found.ttl <= TimeHelper.now()) {
       await this.delete(data);
     }
 
@@ -61,10 +54,10 @@ module.exports = class ResolutionsService {
 
     const found = patient?.resolution?.dataValues;
 
-    if (found && found.ttl > this.time.now()) {
-      return found.resolution;
+    if (found && found.ttl > TimeHelper.now()) {
+      return found;
     }
-    if (found && found.ttl <= this.time.now()) {
+    if (found && found.ttl <= TimeHelper.now()) {
       await this.deleteOne({ where: { patientId: patient.id } });
     }
 

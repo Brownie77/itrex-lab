@@ -1,3 +1,13 @@
+# Development
+
+For development navigate to the api directory and run:
+
+```bash
+npm run dev
+```
+
+This will start both backend and frontend servers and will automatically restart them on code updates.
+
 # Docker
 
 To start the application, go to the api directory, set configuration you need in <b>.env</b> file, go back to the root directory and run:

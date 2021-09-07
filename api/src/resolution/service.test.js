@@ -1,73 +1,88 @@
 require('dotenv').config();
 
+const jwt = require('jsonwebtoken');
 const Service = require('./service');
 const StorageClient = require('./storageClient');
-const {
-  resolutionsDatabase,
-  patientsDatabase,
-} = require('../storage/chooseTestDB');
 const PatientsService = require('../patients/service');
 const PatientsStorageClient = require('../patients/storageClient');
+const Database = require('../storage/testDB');
+
+jest.mock('jsonwebtoken');
 
 describe('test resolution service', () => {
   const service = new Service(
-    new StorageClient(resolutionsDatabase),
-    new PatientsService(new PatientsStorageClient(patientsDatabase)),
+    new StorageClient(Database),
+    new PatientsService(new PatientsStorageClient(Database)),
   );
 
-  const data1 = { name: 'Seth', ttl: 1, resolution: 'testing' };
-  const data2 = { name: 'Ronald', ttl: 100, resolution: 'yes' };
+  const spyPatientsServiceGetId = jest.spyOn(
+    PatientsService.prototype,
+    'getId',
+  );
+  const spyPatientsServiceFindOne = jest.spyOn(
+    PatientsService.prototype,
+    'findOne',
+  );
+  const spyStorageGetOne = jest.spyOn(StorageClient.prototype, 'getOne');
+
+  jest.spyOn(StorageClient.prototype, 'deleteOne').mockReturnValue();
+  jest.spyOn(StorageClient.prototype, 'save').mockReturnValue();
+
+  const data1 = { name: 'Seth', ttl: 1830999653380, resolution: 'testing' };
+  const data2 = { name: 'Ronald', ttl: 1630999653380, resolution: 'yes' };
 
   it('should set resolution', async () => {
-    const spy = jest.spyOn(service, 'set');
-
-    //creating two patients
-    await service.patientsService.create(data1);
-    await service.patientsService.create(data2);
-
+    spyPatientsServiceGetId.mockReturnValue('1');
+    spyStorageGetOne.mockReturnValue({});
     await service.set(data1);
-    expect(spy).toBeCalledWith(data1);
 
+    spyPatientsServiceGetId.mockReturnValue('2');
+    spyStorageGetOne.mockReturnValue({
+      patientId: '2',
+      resolution: 'ad',
+      ttl: '11',
+    });
     await service.set(data2);
-    expect(spy).toBeCalledWith(data2);
-
-    expect(spy).toBeCalledTimes(2);
   });
 
-  it('should return resolution by given key', async () => {
-    const result1 = await service.get(data1);
-    const result2 = await service.get(data2);
+  it('should return resolution by given key only if ttl is valid', async () => {
+    spyPatientsServiceGetId.mockReturnValue('1');
+    spyStorageGetOne.mockReturnValue(data1);
+
+    const result1 = await service.getByName(data1);
+
+    spyPatientsServiceGetId.mockReturnValue('2');
+    spyStorageGetOne.mockReturnValue(data2);
+    spyPatientsServiceFindOne.mockReturnValue({ id: '2' });
+
+    const result2 = await service.getByName(data2);
 
     expect(result1.resolution).toBe(data1.resolution);
     expect(result1.ttl).toBeDefined();
 
-    expect(result2.resolution).toBe(data2.resolution);
-    expect(result2.ttl).toBeDefined();
+    expect(result2).toStrictEqual({});
   });
 
-  it('should override resolution if it already exists', async () => {
-    const data = { name: 'Seth', ttl: 1, resolution: 'testing override' };
-    let result = await service.get(data);
+  it('should return resolution by userId encoded in jwt', async () => {
+    jwt.verify.mockReturnValue({ userId: '1' });
+    spyPatientsServiceFindOne.mockReturnValue({
+      resolution: { dataValues: data1 },
+    });
 
-    expect(result.resolution).toBe(data1.resolution);
-    expect(result.ttl).toBeDefined();
+    const result1 = await service.get(data1);
 
-    await service.set(data);
-
-    result = await service.get(data);
-    expect(result.resolution).toBe(data.resolution);
-    expect(result.ttl).toBeDefined();
+    expect(result1.resolution).toBe(data1.resolution);
+    expect(result1.ttl).toBeDefined();
   });
 
   it('should delete resolution by given key', async () => {
     await service.delete(data1);
 
-    const result1 = await service.get(data1);
-    const result2 = await service.get(data2);
+    spyPatientsServiceGetId.mockReturnValue('1');
+    spyStorageGetOne.mockReturnValue({});
 
-    expect(result1).toStrictEqual({});
+    const result = await service.getByName(data1);
 
-    expect(result2.resolution).toBe(data2.resolution);
-    expect(result2.ttl).toBeDefined();
+    expect(result).toStrictEqual({});
   });
 });

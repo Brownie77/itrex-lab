@@ -1,5 +1,8 @@
 const { promisify } = require('util');
 const redis = require('redis');
+const {
+  DatabaseFailedToConnectError,
+} = require('../../errors/customDatabaseErrs');
 
 const PORT = process.env.REDIS_PORT;
 const HOST = process.env.REDIS_HOST;
@@ -18,13 +21,12 @@ module.exports = new (class Database {
       );
     });
     this.db.on('error', (error) => {
-      console.log(error);
-      console.log(
+      throw new DatabaseFailedToConnectError(
         `A critical error occured while connecting to redis server on ${
           process.env.REDIS_URL || `localhost:${PORT}`
-        }, the server is shutting down...`,
+        }`,
+        error,
       );
-      process.exit(1);
     });
     this.db.scan = promisify(this.db.scan);
   }
@@ -36,7 +38,7 @@ module.exports = new (class Database {
     do {
       const reply = await this.db.scan(cursor, 'MATCH', pattern);
 
-      cursor = reply[0];
+      [cursor] = reply;
       found.push(...reply[1]);
     } while (cursor !== '0');
 

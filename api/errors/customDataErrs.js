@@ -8,22 +8,25 @@ class GlobalDataError extends Error {
 }
 
 class DataConflictError extends GlobalDataError {
-  constructor(message) {
+  constructor(message, err) {
     super(message);
+    this.causedBy = err || '-';
     this.name = 'DataConfilctError';
   }
 }
 
 class DataNotFoundError extends GlobalDataError {
-  constructor(message) {
+  constructor(message, err) {
     super(message);
+    this.causedBy = err || '-';
     this.name = 'DataNotFoundError';
   }
 }
 
 class DataForbiddenError extends GlobalDataError {
-  constructor(message) {
+  constructor(message, err) {
     super(message);
+    this.causedBy = err || '-';
     this.name = 'DataForbiddenError';
   }
 }

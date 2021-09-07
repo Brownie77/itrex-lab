@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { DataNotFoundError } = require('../../errors/customDataErrs');
 
 module.exports = class QueueService {
   constructor(Storage, PatientsService) {
@@ -17,7 +18,7 @@ module.exports = class QueueService {
   async get() {
     const id = await this.storage.getAtPosition(0);
     if (!id) {
-      return {};
+      throw new DataNotFoundError('There is no patients in the queue');
     }
     const patient = await this.patientsService.findOne({ where: { id } });
     return patient;

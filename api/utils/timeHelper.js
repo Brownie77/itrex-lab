@@ -1,9 +1,13 @@
 module.exports = class TimeHelper {
-  minToMs(min) {
+  static minToMs(min) {
     return min * 60 * 1000;
   }
 
-  now() {
+  static hoursToMs(hours) {
+    return hours * 3600000;
+  }
+
+  static now() {
     return Date.now();
   }
 };

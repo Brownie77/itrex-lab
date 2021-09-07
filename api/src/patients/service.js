@@ -1,3 +1,6 @@
+const { DataNotFoundError } = require('../../errors/customDataErrs');
+const errMsg = require('../errorMessages');
+
 module.exports = class PatientsService {
   constructor(Storage) {
     this.storage = Storage;
@@ -6,11 +9,11 @@ module.exports = class PatientsService {
   async getId(data) {
     const person = await this.findOne({ where: data });
 
-    if (person) {
-      return { id: person.id };
+    if (!person) {
+      throw new DataNotFoundError(errMsg.notfound);
     }
 
-    return null;
+    return { id: person.id };
   }
 
   async createPatient(data) {

@@ -1,4 +1,4 @@
-const QUEUE_DATABASE_TYPE = process.env.QUEUE_DATABASE_TYPE;
+const { QUEUE_DATABASE_TYPE } = process.env;
 
 if (QUEUE_DATABASE_TYPE === 'inmemory') {
   module.exports.database = require('../storage/memoryDatabase');

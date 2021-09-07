@@ -6,9 +6,9 @@ const validate = require('../../middleware/validate');
 const router = Router();
 
 router.post(
-  '/register',
+  '/registration',
   validate({ body: schemas.userSchema }),
-  authController.register,
+  authController.registration,
 );
 
 router.post(

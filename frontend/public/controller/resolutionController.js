@@ -26,6 +26,7 @@ export default class ResolutionController {
       if (window.location.pathname === '/cabinet') {
         const { data } = await this.model.fetchResolution();
         if (data.resolution) {
+          console.log(data.resolution);
           this.view.setResolution(data.resolution);
         }
       }

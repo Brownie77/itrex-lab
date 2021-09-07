@@ -4,6 +4,9 @@ const {
   DataNotFoundError,
   DataForbiddenError,
 } = require('../errors/customDataErrs');
+const {
+  DatabaseFailedToConnectError,
+} = require('../errors/customDatabaseErrs');
 const FlexError = require('../errors/flexError');
 const status = require('../src/statuses');
 
@@ -26,8 +29,11 @@ module.exports = (err, req, res, next) => {
     case FlexError:
       res.status(err.status).send(err.message);
       break;
+    case DatabaseFailedToConnectError:
+      res.status(status.SERVER_ERROR).send('Server error');
+      return process.exit(1);
     default:
-      res.status(status.SERVER_ERROR).send(`${err.type}: Server error`);
+      res.status(status.SERVER_ERROR).send('Server error');
       break;
   }
   return next();

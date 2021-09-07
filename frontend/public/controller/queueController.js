@@ -39,6 +39,7 @@ export default class QueueController {
         this.view.setCurrentlyDisplayedPatient(newPatient);
       }
     } catch (e) {
+      this.view.setCurrentlyDisplayedPatient(this.EmptyQueueMsg);
       console.log(e);
     }
   }

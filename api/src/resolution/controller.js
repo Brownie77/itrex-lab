@@ -45,7 +45,7 @@ module.exports = class ResolutionController {
       const { access_token: accessToken } = adapt(config, req);
       const response = await this.service.get(accessToken);
 
-      return res.status(status.OK).send({ resolution: response });
+      return res.status(status.OK).send(response);
     } catch (error) {
       return next(error);
     }

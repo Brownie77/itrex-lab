@@ -8,8 +8,8 @@ export default class AuthController {
     }
 
     if (
-      window.location.pathname === '/auth/sign_in' ||
-      window.location.pathname === '/auth/sign_up'
+      window.location.pathname === '/auth/sign-in' ||
+      window.location.pathname === '/auth/sign-up'
     ) {
       this.handleAuthRoutes();
     }
@@ -40,7 +40,7 @@ export default class AuthController {
       });
       const response = await this.model.register(data);
       if (response.status === 201) {
-        document.location.href = '/auth/sign_in';
+        document.location.href = '/auth/sign-in';
       } else {
         throw new Error('User wasnt registered');
       }
@@ -85,10 +85,10 @@ export default class AuthController {
     try {
       const allowed = await this.model.authenticate();
       if (allowed.status !== 200) {
-        window.location.href = 'http://localhost:3000/auth/sign_in';
+        window.location.href = 'http://localhost:3000/auth/sign-in';
       }
     } catch (err) {
-      window.location.href = 'http://localhost:3000/auth/sign_in';
+      window.location.href = 'http://localhost:3000/auth/sign-in';
       console.log(err.message);
     }
   }

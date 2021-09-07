@@ -17,7 +17,7 @@ app.use('/cabinet', queueRoutes);
 app.use('/doctor', doctorRoutes);
 
 app.get('/', (req, res) => {
-  res.redirect('/auth/sign_in');
+  res.redirect('/auth/sign-in');
 });
 
 app.use(err404Handle);

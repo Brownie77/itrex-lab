@@ -2,7 +2,7 @@ export default class AuthModel {
   async register(data) {
     const config = {
       method: 'POST',
-      url: 'http://localhost:8080/api/v1/auth/register',
+      url: 'http://localhost:8080/api/v1/auth/registration',
       data: data,
       withCredentials: true,
     };
