@@ -13,13 +13,13 @@
     />
     <link rel="stylesheet" href="styles/common.css" />
     <link rel="stylesheet" href="styles/management.css" />
-    <title>Management</title>
+    <title>Doctor</title>
   </head>
   <body>
     <div class="context">
       <div class="container">
         <div class="row">
-          <form action="/queue">
+          <form action="/cabinet">
             <button type="submit" class="btn btn-secondary btn-wide">
               Switch endpoints
             </button>
@@ -63,7 +63,7 @@
               <div class="ttl">
                 <input
                   type="number"
-                  min="0"
+                  min="1"
                   oninput="validity.valid||(value='');"
                   class="form-control"
                   id="resolution-ttl"
@@ -154,6 +154,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script type="module" src="index.js"></script>
+    <script type="module" src="/index.js"></script>
   </body>
 </html>

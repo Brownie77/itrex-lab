@@ -1,9 +1,18 @@
 version: '3.7'
 services:
+  mysql:
+    container_name: mysql
+    image: mysql
+    hostname: mysql
+    ports:
+      - '3307:3306'
+    expose:
+      - '3306'
+    restart: always
+
   redis:
     container_name: redis
     image: redis
-    profiles: ['redis']
     command: redis-server
     ports:
       - '6379:6379'
@@ -15,7 +24,7 @@ services:
     container_name: api
     environment:
       REDIS_URL: redis://redis:6379
-    profiles: ['redis', 'inmemory']
+      MYSQL_HOST: host.docker.internal
     build: api/
     restart: always
     ports:
@@ -23,7 +32,6 @@ services:
 
   frontend:
     container_name: frontend
-    profiles: ['redis', 'inmemory']
     build: frontend/
     restart: always
     ports:

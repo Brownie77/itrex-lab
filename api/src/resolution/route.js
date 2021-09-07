@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const resolutionController = require('./init');
+const resolutionController = require('./initializedController');
 const validate = require('../../middleware/validate');
 const schemas = require('./validationSchemas');
 
@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- *  /resolutions/{name}:
+ *  api/v1/patients/{patientId}/resolutions:
  *    get:
  *     summary: Returns the resolution for the patient
  *     tags:
@@ -35,14 +35,14 @@ const router = Router();
  */
 
 router.get(
-  '/:id',
+  '/:patientId/resolutions',
   validate({ params: schemas.IDSchema }),
   resolutionController.get,
 );
 
 /**
  * @swagger
- *  /resolutions/{name}:
+ *  api/v1/patients/{patientId}/resolution:
  *    put:
  *     summary: Set resolution
  *     tags:
@@ -74,14 +74,16 @@ router.get(
  */
 
 router.put(
-  '/:id',
+  '/:patientId/resolution',
   validate({ params: schemas.IDSchema, body: schemas.resolutionSchema }),
   resolutionController.set,
 );
 
+router.get('/resolution', resolutionController.ownResolution);
+
 /**
  * @swagger
- *  /resolutions/{name}:
+ *  api/v1/patients/{patientId}/resolutions:
  *    delete:
  *     summary: Delete the resolution for the patient
  *     tags:
@@ -103,7 +105,7 @@ router.put(
  */
 
 router.delete(
-  '/:id',
+  '/:patientId/resolutions',
   validate({ params: schemas.IDSchema }),
   resolutionController.delete,
 );

@@ -14,10 +14,10 @@ module.exports.resolutionSchema = {
 
 module.exports.IDSchema = {
   type: 'object',
-  required: ['id'],
+  required: ['patientId'],
   additionalProperties: false,
   properties: {
-    id: {
+    patientId: {
       type: 'string',
       minLength: 3,
     },

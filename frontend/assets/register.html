@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/styles/register.css" />
+    <link rel="stylesheet" href="/styles/common.css" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <div class="context">
+      <div class="d-flex justify-content-center h-100">
+        <div class="card">
+          <div class="card-header">
+            <h3>Sign Up</h3>
+          </div>
+          <div class="card-body">
+            <form name="register">
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-envelope"></i
+                  ></span>
+                </div>
+                <input type="email" id="email" class="form-control" placeholder="email" />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-address-card"></i
+                  ></span>
+                </div>
+                <input type="text" id="user-name" class="form-control" placeholder="name" />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-birthday-cake"></i
+                  ></span>
+                </div>
+                <input type="date" id="birthdate" class="form-control" />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-key"></i
+                  ></span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="password"
+                  id="password"
+                />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-key"></i
+                  ></span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirm-password"
+                  placeholder="confirm password"
+                />
+              </div>
+              <div class="input-group form-group"
+                <label for="gender-male">Male</label>
+                <input type="radio" class="form-control" name="gender" id="gender-male" value="male"/>
+                <label for="gender-female">Female</label>
+                <input type="radio" class="form-control" name="gender" id="gender-female" value="female" />
+              </div>
+              <div class="form-group">
+                <input
+                  type="submit"
+                  value="Register"
+                  id="register-btn"
+                  class="btn float-right login_btn"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-center links">
+              <a href="/auth/sign-in">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="area">
+      <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+    integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>

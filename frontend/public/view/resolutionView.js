@@ -1,14 +1,19 @@
 export default class ResolutionView {
   constructor() {
     this.resolutionSearchInputDoctor = document.getElementById('doctor-search');
-    this.resolutionSearchInputClient = document.getElementById('client-search');
     this.currentPatient = document.getElementById('placeholder');
     this.queueInput = document.getElementById('name');
     this.addResolutionInput = document.getElementById('resolution-text');
     this.resolutionTTL = document.getElementById('resolution-ttl');
-    this.resolutionOutputDoctor = document.getElementById('doctor-resolution-found');
-    this.resolutionOutputClient = document.getElementById('client-resolution-found');
+    this.resolutionOutputDoctor = document.getElementById(
+      'doctor-resolution-found',
+    );
+    this.resolutionOutputClient = document.getElementById(
+      'client-resolution-found',
+    );
     this.deleteResolutionBtn = document.getElementById('resolution-delete-btn');
+    this.resolutionDisplay =
+      document.getElementById('client-resolution-found') || null;
   }
 
   displayResolutionDoctorAndClearSearchInput(resolution) {
@@ -24,17 +29,22 @@ export default class ResolutionView {
   }
 
   getClientSearchInput() {
-    return this.resolutionSearchInputClient.value.toUpperCase();
+    return this.resolutionSearchInputClient.value;
   }
 
   getDoctorSearchInput() {
-    return this.resolutionSearchInputDoctor.value.toUpperCase();
+    return this.resolutionSearchInputDoctor.value;
   }
 
   getTTLAndClearInput() {
     const ttl = this.resolutionTTL.value;
     this.resolutionTTL.value = '';
     return ttl;
+  }
+
+  setResolution(text) {
+    this.resolutionDisplay.value = text;
+    return this;
   }
 
   getCurrentAppointmentResolutionAndClearInput() {
@@ -44,12 +54,7 @@ export default class ResolutionView {
   }
 
   getCurrentPatientName() {
-    return this.currentPatient.textContent.toUpperCase();
-  }
-
-  getNameFromInput() {
-    const name = this.queueInput.value;
-    return name.toUpperCase();
+    return this.currentPatient.textContent;
   }
 
   setDeleteButtonState(enabled) {

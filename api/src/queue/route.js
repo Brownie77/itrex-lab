@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const queueController = require('./init');
+const queueController = require('./initializedController');
 const schemas = require('./validationSchemas');
 const validate = require('../../middleware/validate');
 
@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- *  /queue/first:
+ *  api/v1/queue:
  *    get:
  *     summary: Returns the first patient from the queue
  *     tags:
@@ -23,11 +23,11 @@ const router = Router();
  *        description: Unexpected server error
  */
 
-router.get('/first', queueController.first);
+router.get('/', queueController.first);
 
 /**
  * @swagger
- *  /queue:
+ *  api/v1/queue:
  *    post:
  *     summary: Add new patient to the queue
  *     tags:
@@ -51,15 +51,11 @@ router.get('/first', queueController.first);
  *        description: Unexpected server error
  */
 
-router.post(
-  '/',
-  validate({ body: schemas.patientSchema }),
-  queueController.addNewPatient,
-);
+router.post('/', queueController.addNewPatient);
 
 /**
  * @swagger
- *  /queue/next:
+ *  api/v1/queue/next:
  *    get:
  *     summary: Returns next patient in the queue
  *     tags:
@@ -76,6 +72,8 @@ router.post(
  */
 
 router.get('/next', queueController.next);
+
+router.get('/position', queueController.position);
 
 module.exports = router;
 

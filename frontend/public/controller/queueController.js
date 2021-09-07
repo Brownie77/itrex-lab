@@ -16,9 +16,16 @@ export default class QueueController {
 
   async handleLoad() {
     try {
-      const currentPatient = await this.model.getFirst();
-      if (currentPatient) {
-        this.view.setCurrentlyDisplayedPatient(currentPatient);
+      if (window.location.pathname === '/cabinet') {
+        const { data } = await this.model.getPosition();
+        if (data.position) {
+          this.view.setPosition(data.position);
+        }
+      } else {
+        const name = await this.model.getFirst();
+        if (name) {
+          this.view.setCurrentlyDisplayedPatient(name);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -27,25 +34,22 @@ export default class QueueController {
 
   async handleProcessCurrentPatient() {
     try {
-      if (
-        this.view.getCurrentlyDisplayedPatient() !==
-        this.EmptyQueueMsg.toUpperCase()
-      ) {
+      if (this.view.getCurrentlyDisplayedPatient() !== this.EmptyQueueMsg) {
         const newPatient = (await this.model.getNext()) || this.EmptyQueueMsg;
         this.view.setCurrentlyDisplayedPatient(newPatient);
       }
     } catch (e) {
+      this.view.setCurrentlyDisplayedPatient(this.EmptyQueueMsg);
       console.log(e);
     }
   }
 
   async handleAddToQueue() {
     try {
-      const newPatient = this.view.getNameFromInputAndClearInput();
-      if (newPatient) {
-        await this.model.enqueue(newPatient);
-        const currentPatient = await this.model.getFirst();
-        this.view.setCurrentlyDisplayedPatient(currentPatient);
+      await this.model.enqueue();
+      const { data } = await this.model.getPosition();
+      if (data.position) {
+        this.view.setPosition(data.position);
       }
     } catch (e) {
       console.log(e);

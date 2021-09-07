@@ -1,19 +1,22 @@
 export default class QueueView {
   constructor() {
+    this.position = document.getElementById('position') || null;
     this.queueDisplay = document.getElementById('placeholder') || null;
-    this.queueInput = document.getElementById('name') || null;
-    this.ttl = document.getElementById('set-ttl') || null;
-    this.checkbox = document.getElementById('use-default-TTL-check') || null;
   }
 
   getCurrentlyDisplayedPatient() {
-    return this.queueDisplay.textContent.toUpperCase();
+    return this.queueDisplay.textContent;
+  }
+
+  setPosition(position) {
+    this.position.textContent = position;
+    return this;
   }
 
   getNameFromInputAndClearInput() {
     const name = this.queueInput.value;
     this.queueInput.value = '';
-    return name.toUpperCase();
+    return name;
   }
 
   setCurrentlyDisplayedPatient(name) {

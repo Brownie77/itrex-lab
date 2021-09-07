@@ -1,6 +1,13 @@
 module.exports = class TimeHelper {
-  // eslint-disable-next-line class-methods-use-this
-  minToMs(min) {
+  static minToMs(min) {
     return min * 60 * 1000;
+  }
+
+  static hoursToMs(hours) {
+    return hours * 3600000;
+  }
+
+  static now() {
+    return Date.now();
   }
 };

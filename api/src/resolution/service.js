@@ -1,56 +1,77 @@
-const errorMsgs = require('../errorMsgs');
+const jwt = require('jsonwebtoken');
 const TimeHelper = require('../../utils/timeHelper');
-const { DataNotFoundError } = require('../../errors/customDataErrs');
 
-module.exports = class ResolutionService {
-  constructor(StorageClient) {
-    this.storage = StorageClient;
-    this.timeHelper = new TimeHelper();
-    this.ttl_default = process.env.TTL_DEF;
-    this.nullified = { resolution: null, ttl: null };
+module.exports = class ResolutionsService {
+  constructor(Storage, PatientsService) {
+    this.storage = Storage;
+    this.patientsService = PatientsService;
   }
 
-  async set({ id: key, ...value }) {
-    const updatedValue = Object.assign(value);
-    updatedValue.ttl = this.#setTTL(value.ttl);
-    await this.storage.insert(key, updatedValue);
+  async set(data) {
+    const payload = { ...data };
+    delete payload.name;
+
+    const { id } = await this.patientsService.getId({
+      name: data.name,
+    });
+
+    const TTL = payload.ttl || process.env.TTL_DEF;
+
+    payload.ttl = TimeHelper.now() + TimeHelper.minToMs(TTL);
+
+    return this.storage.save({ id }, payload);
   }
 
-  async getByKey({ id: key }) {
-    const exist = await this.storage.exist(key);
-    if (!exist) {
-      throw new DataNotFoundError(errorMsgs.notfound);
+  async getByName(data) {
+    const patient = await this.patientsService.getId({
+      name: data.name,
+    });
+
+    const { id } = patient;
+    const found = await this.storage.getOne({ where: { id } });
+
+    if (found.ttl && found.ttl > TimeHelper.now()) {
+      return found;
     }
-    const result = await this.storage.get(key);
-
-    if (this.#isOutdated(result.ttl)) {
-      this.#reset(key);
-      return this.nullified;
+    if (found.ttl && found.ttl <= TimeHelper.now()) {
+      await this.delete(data);
     }
-    return result;
+
+    return {};
   }
 
-  #setTTL(ttl) {
-    if (ttl === 0) {
-      return Date.now() + this.timeHelper.minToMs(this.ttl_default);
+  async get(token) {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const patient = await this.patientsService.findOne({
+      where: { userId: decoded.userId },
+      include: [
+        {
+          model: this.storage.instanceDb.resolution,
+          required: false,
+        },
+      ],
+    });
+
+    const found = patient?.resolution?.dataValues;
+
+    if (found && found.ttl > TimeHelper.now()) {
+      return found;
     }
-    return Date.now() + this.timeHelper.minToMs(ttl);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  #isOutdated(ttl) {
-    return ttl ? ttl < Date.now() : false;
-  }
-
-  async #reset(key) {
-    const exist = await this.storage.exist(key);
-    if (!exist) {
-      throw new DataNotFoundError(errorMsgs.notfound);
+    if (found && found.ttl <= TimeHelper.now()) {
+      await this.deleteOne({ where: { patientId: patient.id } });
     }
-    await this.storage.insert(key, this.nullified);
+
+    return null;
   }
 
-  delete({ id }) {
-    this.#reset(id);
+  async deleteOne(query) {
+    return this.storage.deleteOne(query);
+  }
+
+  async delete({ name }) {
+    const patient = await this.patientsService.findOne({ where: { name } });
+    return this.storage.deleteOne({
+      where: { patientId: patient.id },
+    });
   }
 };

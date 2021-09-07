@@ -7,35 +7,12 @@ class GlobalDatabaseError extends Error {
   }
 }
 
-class DatabaseAlreadyExistsError extends GlobalDatabaseError {
-  constructor(message) {
-    super(message);
-    this.name = 'DatabaseAlreadyExistsError';
-  }
-}
-
-class DatabaseWrongTypeError extends GlobalDatabaseError {
-  constructor(message) {
-    super(message);
-    this.name = 'DatabaseWrongTypeError';
-  }
-}
-
-class DatabaseUnknownTypeError extends GlobalDatabaseError {
-  constructor(message) {
-    super(message);
-    this.name = 'DatabaseUnknownTypeError';
-  }
-}
-
 class DatabaseFailedToConnectError extends GlobalDatabaseError {
-  constructor(message) {
+  constructor(message, err) {
     super(message);
+    this.causedBy = err || '-';
     this.name = 'DatabaseFailedToConnectError';
   }
 }
 
-module.exports.DatabaseAlreadyExistsError = DatabaseAlreadyExistsError;
-module.exports.DatabaseWrongTypeError = DatabaseWrongTypeError;
-module.exports.DatabaseUnknownTypeError = DatabaseUnknownTypeError;
 module.exports.DatabaseFailedToConnectError = DatabaseFailedToConnectError;
