@@ -21,6 +21,11 @@ module.exports = new (class Database {
         port: process.env.MYSQL_PORT,
       },
     );
+    // const sequelize = new Sequelize('medstage', 'root', 'KevalaKumar1995', {
+    //   dialect: 'mysql',
+    //   host: 'localhost',
+    //   logging: false
+    // });
     this.db
       .authenticate()
       .then(() => {
