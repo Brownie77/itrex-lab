@@ -11,14 +11,6 @@ const Doctor = {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  gender: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  birthdate: {
-    type: Sequelize.DATEONLY,
-    allowNull: false,
-  },
 };
 
-module.exports = Patient;
+module.exports = Doctor;

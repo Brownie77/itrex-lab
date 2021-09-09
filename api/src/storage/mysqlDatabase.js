@@ -8,7 +8,7 @@ const userModel = require('./models/user');
 const patientModel = require('./models/patient');
 const resolutionModel = require('./models/resolution');
 const specialityModel = require('./models/specialty');
-
+const doctorModel = require('./models/doctor');
 
 module.exports = new (class Database {
   constructor() {
@@ -39,7 +39,10 @@ module.exports = new (class Database {
     this.patient = this.db.define('patients', patientModel);
     this.resolution = this.db.define('resolutions', resolutionModel);
     this.specialty = this.db.define('specialty', specialityModel);
+    this.doctor = this.db.define('doctor', doctorModel);
 
+    this.doctor.belongsToMany(this.specialty, { through: 'doctor-specialty' });
+    this.specialty.belongsToMany(this.doctor, { through: 'doctor-specialty' });
     this.user.hasOne(this.patient, {
       foreignKey: {
         name: 'userId',
@@ -63,5 +66,6 @@ module.exports = new (class Database {
     this.patient.sync().catch((err) => console.log(err));
     this.resolution.sync().catch((err) => console.log(err));
     this.specialty.sync().catch((err) => console.log(err));
+    this.doctor.sync().catch((err) => console.log(err));
   }
 })();
