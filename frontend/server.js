@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { queueRoutes, doctorRoutes, authRoutes } from './routes/index.js';
+import { queueRoutes, doctorRoutes, authRoutes, adminAuthRoutes } from './routes/index.js';
 
 import err404Handle from './middleware/notFound.js';
 
@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use('/auth', authRoutes);
 app.use('/cabinet', queueRoutes);
 app.use('/doctor', doctorRoutes);
+app.use('/admin', adminAuthRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/auth/sign-in');

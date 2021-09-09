@@ -31,6 +31,7 @@ module.exports = class RedisStrategy {
   }
 
   async #getArray() {
+    console.log('queue is', this.name);
     const array = await this.db.get(this.name);
     return array ? JSON.parse(array) : [];
   }

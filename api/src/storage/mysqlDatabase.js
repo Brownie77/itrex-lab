@@ -7,6 +7,8 @@ const {
 const userModel = require('./models/user');
 const patientModel = require('./models/patient');
 const resolutionModel = require('./models/resolution');
+const specialityModel = require('./models/specialty');
+
 
 module.exports = new (class Database {
   constructor() {
@@ -21,11 +23,6 @@ module.exports = new (class Database {
         port: process.env.MYSQL_PORT,
       },
     );
-    // const sequelize = new Sequelize('medstage', 'root', 'KevalaKumar1995', {
-    //   dialect: 'mysql',
-    //   host: 'localhost',
-    //   logging: false
-    // });
     this.db
       .authenticate()
       .then(() => {
@@ -41,6 +38,7 @@ module.exports = new (class Database {
     this.user = this.db.define('users', userModel);
     this.patient = this.db.define('patients', patientModel);
     this.resolution = this.db.define('resolutions', resolutionModel);
+    this.specialty = this.db.define('specialty', specialityModel);
 
     this.user.hasOne(this.patient, {
       foreignKey: {
@@ -64,5 +62,6 @@ module.exports = new (class Database {
     this.user.sync().catch((err) => console.log(err));
     this.patient.sync().catch((err) => console.log(err));
     this.resolution.sync().catch((err) => console.log(err));
+    this.specialty.sync().catch((err) => console.log(err));
   }
 })();

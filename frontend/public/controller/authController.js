@@ -96,6 +96,7 @@ export default class AuthController {
   async handleAuthRoutes() {
     try {
       const notAllowed = await this.model.notAuthenticated();
+      console.log(notAllowed);
       if (notAllowed.data) {
         window.location.href = 'http://localhost:3000/cabinet';
       }
