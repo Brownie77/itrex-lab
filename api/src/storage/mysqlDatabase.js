@@ -61,11 +61,18 @@ module.exports = new (class Database {
         allowNull: false,
       },
     });
-
-    this.user.sync().catch((err) => console.log(err));
-    this.patient.sync().catch((err) => console.log(err));
-    this.resolution.sync().catch((err) => console.log(err));
-    this.specialty.sync().catch((err) => console.log(err));
-    this.doctor.sync().catch((err) => console.log(err));
+    // this.user.sync().catch((err) => console.log(err));
+    // this.patient.sync().catch((err) => console.log(err));
+    // this.resolution.sync().catch((err) => console.log(err));
+    // this.specialty.sync().catch((err) => console.log(err));
+    // this.doctor.sync().catch((err) => console.log(err));
+    (async () => {
+      await this.db.sync({ force: true });
+      console.log('All models were synchronized successfully.');
+      const totalSpecialities = await this.specialty.count();
+      if (totalSpecialities === 0) {
+        await this.specialty.bulkCreate([{ name: 'Surgeon' }, { name: 'Therapist' }, { name: 'Otorhinolaryngologist' }, { name: 'Pediatrician' }, { name: 'Proctologist' }, { name: 'Gynecologist' }]);
+      }
+    })();
   }
 })();

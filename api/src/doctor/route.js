@@ -5,6 +5,8 @@ const DoctorController = require('./intializedController');
 const router = Router();
 
 router.post('/add', DoctorController.add);
-router.post('/add/specialty', DoctorController.addSpeciality);
-router.get('/all', DoctorController.all)
+router.post('/specialty/add', DoctorController.addSpeciality);
+router.get('/all', DoctorController.all);
+router.get('/specialty/all', DoctorController.allSpecialites);
+
 module.exports = router;

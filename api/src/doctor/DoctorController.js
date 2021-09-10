@@ -33,4 +33,13 @@ module.exports = class DoctorController {
       return next(error);
     }
   }
+
+  allSpecialites = async (req, res, next) => {
+    try {
+      const allSpecialites = await this.specialty.findAll();
+      return res.status(200).send(allSpecialites);
+    } catch (error) {
+      return next(error);
+    }
+  }
 };
