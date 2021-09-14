@@ -75,6 +75,8 @@ router.get('/next', queueController.next);
 
 router.get('/position', queueController.position);
 
+router.post('/select', queueController.select);
+
 module.exports = router;
 
 /**

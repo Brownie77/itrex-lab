@@ -1,5 +1,8 @@
 const { Sequelize } = require('sequelize');
+const { promisify } = require('util');
+const bcrypt = require('bcrypt');
 
+const hash = promisify(bcrypt.hash);
 const {
   DatabaseFailedToConnectError,
 } = require('../../errors/customDatabaseErrs');
@@ -41,8 +44,15 @@ module.exports = new (class Database {
     this.specialty = this.db.define('specialty', specialityModel);
     this.doctor = this.db.define('doctor', doctorModel);
 
-    this.doctor.belongsToMany(this.specialty, { through: 'doctor-specialty' });
-    this.specialty.belongsToMany(this.doctor, { through: 'doctor-specialty' });
+    this.specialty.hasMany(this.doctor, {
+      foreignKey: {
+        name: 'specialtyId',
+        allowNull: false,
+      },
+      onDelete: 'CASCADE',
+    });
+    this.doctor.belongsTo(this.specialty);
+
     this.user.hasOne(this.patient, {
       foreignKey: {
         name: 'userId',
@@ -50,8 +60,15 @@ module.exports = new (class Database {
       },
       onDelete: 'CASCADE',
     });
+    this.user.hasOne(this.doctor, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      onDelete: 'CASCADE',
+    });
+    this.doctor.belongsTo(this.user);
     this.patient.belongsTo(this.user);
-
     this.patient.hasOne(this.resolution, {
       onDelete: 'CASCADE',
     });
@@ -70,9 +87,34 @@ module.exports = new (class Database {
       await this.db.sync({ force: true });
       console.log('All models were synchronized successfully.');
       const totalSpecialities = await this.specialty.count();
-      if (totalSpecialities === 0) {
-        await this.specialty.bulkCreate([{ name: 'Surgeon' }, { name: 'Therapist' }, { name: 'Otorhinolaryngologist' }, { name: 'Pediatrician' }, { name: 'Proctologist' }, { name: 'Gynecologist' }]);
-      }
+      const totalDoctors = await this.doctor.count();
+      const totalUsers = await this.user.count();
+      // if (totalUsers === 0) {
+      const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
+      const firstMD = await this.user.create({
+        email: process.env.FIRSTMD_EMAIL,
+        password: await hash(process.env.FIRSTMD_PASSWORD, saltRounds),
+      });
+      const secondMD = await this.user.create({
+        email: process.env.SECONDMD_EMAIL,
+        password: await hash(process.env.SECONDMD_PASSWORD, saltRounds),
+      });
+      const thirdMD = await this.user.create({
+        email: process.env.THIRDMD_EMAIL,
+        password: await hash(process.env.THIRDMD_PASSWORD, saltRounds),
+      });
+      const fourthMD = await this.user.create({
+        email: process.env.FOURTHMD_EMAIL,
+        password: await hash(process.env.FOURTHMD_PASSWORD, saltRounds),
+      });
+      // }
+      // if (totalSpecialities === 0) {
+      const specialities = await this.specialty.bulkCreate([{ name: 'Surgeon' }, { name: 'Therapist' }, { name: 'Otorhinolaryngologist' }, { name: 'Pediatrician' }, { name: 'Proctologist' }, { name: 'Gynecologist' }]);
+      await this.doctor.bulkCreate([{ name: 'Nikolai Amosov', specialtyId: specialities[0].id, userId: firstMD.id },
+        { name: 'Nikolai Pirogov', specialtyId: specialities[1].id, userId: secondMD.id },
+        { name: 'Sergei Botkin', specialtyId: specialities[2].id, userId: thirdMD.id },
+        { name: 'Ivan Pavlov', specialtyId: specialities[3].id, userId: fourthMD.id }]);
+      // }
     })();
   }
 })();

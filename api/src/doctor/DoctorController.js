@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const { DataConflictError } = require('../../errors/customDataErrs');
+const adapt = require('../../utils/adapt');
 
 module.exports = class DoctorController {
   constructor(database) {
@@ -38,6 +40,22 @@ module.exports = class DoctorController {
     try {
       const allSpecialites = await this.specialty.findAll();
       return res.status(200).send(allSpecialites);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  current = async (req, res, next) => {
+    const { access_token: accessToken } = adapt(
+      {
+        props: [{ where: 'cookies', what: 'access_token', onError: 401 }],
+      },
+      req,
+    );
+
+    try {
+      const decoded = jwt.verify(accessToken, process.env.SECRET);
+      return res.status(200).send(decoded.userId);
     } catch (error) {
       return next(error);
     }

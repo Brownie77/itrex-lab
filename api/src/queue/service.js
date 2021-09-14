@@ -24,6 +24,11 @@ module.exports = class QueueService {
     return patient;
   }
 
+  async setQueue(doctorId) {
+    const queue = await this.storage.setQueue(doctorId);
+    return queue;
+  }
+
   async getPosition(token) {
     const decoded = jwt.verify(token, process.env.SECRET);
     const patient = await this.patientsService.findOne({

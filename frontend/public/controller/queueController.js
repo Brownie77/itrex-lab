@@ -8,12 +8,25 @@ export default class QueueController {
     document.addEventListener('DOMContentLoaded', this.handleLoad.bind(this));
     document
       .getElementById('add-to-queue-btn')
+      ?.addEventListener('click', this.handleChooseQueue.bind(this));
+    document
+      .getElementById('add-to-queue-btn')
       ?.addEventListener('click', this.handleAddToQueue.bind(this));
     document
       .getElementById('next-patient')
       ?.addEventListener('click', this.handleProcessCurrentPatient.bind(this));
+  
   }
-
+  async handleChooseQueue() {
+    try {
+        const {data: allDoctors} = await this.model.getAllDoctors();
+        const selectedDoctor = this.view.getSelectedDoctor();
+        const doctorInfo = allDoctors.filter(doc => doc.name === selectedDoctor);
+        await this.model.selectQueue(doctorInfo[0].id)
+    } catch (error) {
+        console.log(error);
+      }
+}
   async handleLoad() {
     try {
       if (window.location.pathname === '/cabinet') {
@@ -22,6 +35,7 @@ export default class QueueController {
           this.view.setPosition(data.position);
         }
       } else {
+        await this.model.selectQueue(sessionStorage.getItem("doctorId"));
         const name = await this.model.getFirst();
         if (name) {
           this.view.setCurrentlyDisplayedPatient(name);

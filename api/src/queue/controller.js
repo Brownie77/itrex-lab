@@ -66,4 +66,14 @@ module.exports = class QueueController {
       return next(error);
     }
   };
+
+  select = async (req, res, next) => {
+    try {
+      const selectedDoctor = req.body.doctor_id;
+      const primaryQueue = await this.service.setQueue(selectedDoctor);
+      return res.status(200).send(primaryQueue);
+    } catch (error) {
+      return next(error);
+    }
+  }
 };

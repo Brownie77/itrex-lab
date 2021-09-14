@@ -19,6 +19,16 @@ export default class AuthModel {
     return axios(config).then((res) => res);
   }
 
+  async loginDoctor(data) {
+    const config = {
+      method: 'POST',
+      url: 'http://localhost:8080/api/v1/auth/login/doctor',
+      data: data,
+      withCredentials: true,
+    };
+    return axios(config).then((res) => res);
+  }
+
   async logout() {
     const config = {
       method: 'POST',

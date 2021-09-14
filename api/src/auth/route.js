@@ -16,6 +16,11 @@ router.post(
   validate({ body: schemas.loginSchema }),
   authController.login,
 );
+router.post(
+  '/login/doctor',
+  validate({ body: schemas.loginSchema }),
+  authController.loginDoctor,
+);
 
 router.post('/authenticate', authController.authenticate);
 

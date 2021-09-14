@@ -1,4 +1,26 @@
 export default class QueueModel {
+  async selectQueue (doctor_id) {
+    console.log(`NEW QUEUE IS`,doctor_id )
+      try {
+          const config = {
+              method: 'POST',
+              url: 'http://localhost:8080/api/v1/queue/select',
+              data: {doctor_id},
+              withCredentials: true,
+            };
+            return axios(config).then((res) => res);
+      } catch (error) {
+          console.log(error);
+        }
+    }
+  async getAllDoctors() {
+      const config = {
+        method: 'GET',
+        url: 'http://localhost:8080/api/v1/doctor/all',
+        withCredentials: true,
+      };
+      return axios(config).then((res) => res);
+    }
   enqueue() {
     const config = {
       method: 'POST',

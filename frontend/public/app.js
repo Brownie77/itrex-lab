@@ -7,7 +7,9 @@ import ResolutionModel from './model/resolutionModel.js';
 import AuthController from './controller/authController.js';
 import AuthView from './view/authView.js';
 import AuthModel from './model/authModel.js';
-
+import DoctorController from './controller/doctorController.js';
+import DoctorView from './view/doctorView.js';
+import DoctorModel from './model/doctorModel.js';
 export default class App {
   constructor() {
     try {
@@ -17,6 +19,7 @@ export default class App {
       );
       this.queue = new QueueController(new QueueView(), new QueueModel());
       this.auth = new AuthController(new AuthView(), new AuthModel());
+      this.doctor = new DoctorController(new DoctorView(), new DoctorModel());
     } catch (e) {
       console.log(e.message);
     }

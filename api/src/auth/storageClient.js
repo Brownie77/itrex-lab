@@ -4,6 +4,7 @@ module.exports = class AuthStorageClient {
   constructor(database) {
     this.db = database.db;
     this.model = database.user;
+    this.doctor = database.doctor;
   }
 
   async createUser(data) {
@@ -16,5 +17,9 @@ module.exports = class AuthStorageClient {
 
   async getUser(data) {
     return this.model.findOne({ where: { email: data.email } });
+  }
+
+  async getDoctor(data) {
+    return this.doctor.findOne({ where: { userId: data } });
   }
 };

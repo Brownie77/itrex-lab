@@ -72,6 +72,34 @@ module.exports = class AuthController {
     }
   };
 
+  loginDoctor = async (req, res, next) => {
+    try {
+      const data = adapt(
+        {
+          props: [
+            { where: 'body', what: 'email' },
+            { where: 'body', what: 'password' },
+          ],
+        },
+        req,
+      );
+      const accessToken = await this.service.login(data);
+      const userInfo = await this.service.getUser(data);
+      const docInfo = await this.service.getDoctor(userInfo.id);
+      return res
+        .status(status.OK)
+        .cookie('access_token', accessToken, {
+          expires: new Date(
+            Date.now() + TimeHelper.hoursToMs(process.env.COOKIE_LIFE_TIME),
+          ),
+          httpOnly: true,
+        })
+        .send(docInfo);
+    } catch (error) {
+      return next(error);
+    }
+  };
+
   logout = async (req, res, next) => {
     try {
       return res.status(status.OK).clearCookie('access_token').send();

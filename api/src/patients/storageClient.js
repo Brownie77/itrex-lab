@@ -7,6 +7,7 @@ module.exports = class PatientsStorageClient {
   }
 
   async save(patient) {
+    console.log('patient is', patient);
     const exist = await this.findOne({ where: { name: patient.name } });
     if (exist) {
       throw new DataConflictError('Patient with this name already exists');

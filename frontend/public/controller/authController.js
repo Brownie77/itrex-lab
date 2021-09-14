@@ -9,7 +9,8 @@ export default class AuthController {
 
     if (
       window.location.pathname === '/auth/sign-in' ||
-      window.location.pathname === '/auth/sign-up'
+      window.location.pathname === '/auth/sign-up' ||
+      window.location.pathname === '/admin/sign-in'
     ) {
       this.handleAuthRoutes();
     }
@@ -20,6 +21,9 @@ export default class AuthController {
     document
       .getElementById('login-btn')
       ?.addEventListener('click', this.handleLogin.bind(this));
+    document
+      .getElementById('login-btn-doctor')
+      ?.addEventListener('click', this.handleLoginDoctor.bind(this));
     document
       .getElementById('logout-btn')
       ?.addEventListener('click', this.handleLogout.bind(this));
@@ -63,8 +67,15 @@ export default class AuthController {
         }
       });
       const response = await this.model.login(data);
+      
       if (response.status === 200) {
-        document.location.href = '/cabinet';
+        console.log(window.location.pathname);
+        if(window.location.pathname ==='/auth/sign-in') {
+          document.location.href = '/cabinet';
+        } else {
+          document.location.href = '/doctor';
+
+        }
       } else {
         throw new Error('Cannot login');
       }
@@ -72,7 +83,36 @@ export default class AuthController {
       console.log(err.message);
     }
   }
+  async handleLoginDoctor(event) {
+    try {
+      event.preventDefault();
+      const data = this.view.getLoginData();
+      const values = Object.values(data);
+      if (values.length !== 2) {
+        throw new Error('Fill up all the inputs');
+      }
+      values.map((value) => {
+        if (!value) {
+          throw new Error('Fill up all the inputs with valid data');
+        }
+      });
+      const response = await this.model.loginDoctor(data);
+      console.log(response);
+      if (response.status === 200) {
+        sessionStorage.setItem('doctorId', `${response.data.id}`);
+        if(window.location.pathname ==='/auth/sign-in') {
+          document.location.href = '/cabinet';
+        } else {
+          document.location.href = '/doctor';
 
+        }
+      } else {
+        throw new Error('Cannot login');
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
   async handleLogout() {
     try {
       await this.model.logout();
@@ -96,7 +136,6 @@ export default class AuthController {
   async handleAuthRoutes() {
     try {
       const notAllowed = await this.model.notAuthenticated();
-      console.log(notAllowed);
       if (notAllowed.data) {
         window.location.href = 'http://localhost:3000/cabinet';
       }

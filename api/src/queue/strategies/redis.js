@@ -1,4 +1,5 @@
 const { promisify } = require('util');
+const doctorController = require('../../doctor/intializedController');
 
 module.exports = class RedisStrategy {
   constructor(database, name) {
@@ -6,6 +7,12 @@ module.exports = class RedisStrategy {
     this.db = database.db;
     this.db.set = promisify(this.db.set);
     this.db.get = promisify(this.db.get);
+    this.dk = doctorController;
+  }
+
+  async setQueue(doctorId) {
+    this.name = doctorId;
+    return this.name;
   }
 
   async save(patient) {

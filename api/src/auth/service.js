@@ -38,9 +38,24 @@ module.exports = class AuthService {
     return this.patientsService.createPatient(payload);
   }
 
+  async getDoctor(id) {
+    const doc = await this.storage.getDoctor(id);
+    if (!doc) {
+      throw new DataNotFoundError('Doctor not found');
+    }
+    return doc;
+  }
+
+  async getUser(data) {
+    const user = await this.storage.getUser(data);
+    if (!user) {
+      throw new DataNotFoundError('User not found');
+    }
+    return user;
+  }
+
   async login(data) {
     const user = await this.storage.getUser(data);
-
     if (!user) {
       throw new DataNotFoundError('User not found');
     }

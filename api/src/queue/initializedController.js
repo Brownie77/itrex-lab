@@ -3,6 +3,7 @@ const Service = require('./service');
 const PatientsService = require('../patients/initService');
 const StorageClient = require('./storageClient');
 const { database } = require('./currentDatabase');
+const DoctorController = require('../doctor/intializedController');
 
 module.exports = new Controller(
   new Service(new StorageClient(database), PatientsService),

@@ -2,6 +2,8 @@ export default class QueueView {
   constructor() {
     this.position = document.getElementById('position') || null;
     this.queueDisplay = document.getElementById('placeholder') || null;
+    this.dropDown = document.getElementById('doctors') || null;
+
   }
 
   getCurrentlyDisplayedPatient() {
@@ -23,4 +25,7 @@ export default class QueueView {
     this.queueDisplay.textContent = name;
     return this;
   }
+  getSelectedDoctor() {
+    return this.dropDown.options[this.dropDown.selectedIndex].text;
+}
 }
