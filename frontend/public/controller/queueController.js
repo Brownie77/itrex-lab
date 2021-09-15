@@ -6,16 +6,23 @@ export default class QueueController {
     this.EmptyQueueMsg = '<empty>';
 
     document.addEventListener('DOMContentLoaded', this.handleLoad.bind(this));
+    // document
+    //   .getElementById('add-to-queue-btn')
+    //   ?.addEventListener('click', this.handleChooseQueue.bind(this));
+    // document
+    //   .getElementById('add-to-queue-btn')
+    //   ?.addEventListener('click', this.handleAddToQueue.bind(this));
     document
       .getElementById('add-to-queue-btn')
-      ?.addEventListener('click', this.handleChooseQueue.bind(this));
-    document
-      .getElementById('add-to-queue-btn')
-      ?.addEventListener('click', this.handleAddToQueue.bind(this));
+      ?.addEventListener('click', this.handleQueueButton.bind(this));
     document
       .getElementById('next-patient')
       ?.addEventListener('click', this.handleProcessCurrentPatient.bind(this));
   
+  }
+  async handleQueueButton() {
+    await this.handleChooseQueue();
+    await this.handleAddToQueue();
   }
   async handleChooseQueue() {
     try {
